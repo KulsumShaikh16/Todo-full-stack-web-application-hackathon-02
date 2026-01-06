@@ -3,9 +3,8 @@
  * Provides signup, signin, logout, and token generation functionality
  */
 
-// Force using 127.0.0.1 to match backend server and avoid CORS/env issues
-const API_URL = 'http://127.0.0.1:8000';
-// const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+// Use environment variable for API URL, fallback to localhost for local development
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
 interface SignupData {
   email: string;

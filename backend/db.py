@@ -34,7 +34,20 @@ class Settings(BaseSettings):
     jwt_expiration_minutes: int = 60  # Token expires after 60 minutes
 
 
-settings = Settings()
+from pydantic import ValidationError
+
+try:
+    settings = Settings()
+except ValidationError as e:
+    logger.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    logger.error("CRITICAL ERROR: Missing Environment Variables")
+    logger.error("The application cannot start because the following variables are missing:")
+    for error in e.errors():
+        field = error["loc"][0]
+        logger.error(f"  - {field}: {error['msg']}")
+    logger.error("Please add these variables in your Railway Service -> Variables tab.")
+    logger.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    raise e
 
 # Create SQLModel engine for Neon PostgreSQL
 engine_args = {
