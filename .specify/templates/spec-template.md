@@ -80,25 +80,43 @@
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right functional requirements.
+  For Phase II web apps, include backend, frontend, and authentication requirements.
 -->
 
-### Functional Requirements
+### Backend Requirements
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-001**: Backend MUST provide RESTful API endpoints for [specific features]
+- **FR-002**: Backend MUST persist data in Neon PostgreSQL using SQLModel
+- **FR-003**: Backend MUST associate all data with authenticated users (user_id)
+- **FR-004**: Backend MUST return JSON responses for all endpoints
+- **FR-005**: Backend MUST validate all input before processing
+- **FR-006**: Backend MUST return appropriate HTTP status codes (200, 201, 400, 401, 404, 422)
+- **FR-007**: Backend MUST enforce user-based data isolation in all queries
 
-*Example of marking unclear requirements:*
+### Frontend Requirements
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-008**: Frontend MUST be built with Next.js (React, TypeScript)
+- **FR-009**: Frontend MUST provide responsive UI for desktop and mobile
+- **FR-010**: Frontend MUST communicate with backend via REST APIs only
+- **FR-011**: Frontend MUST handle authentication state (signup/signin/logout)
+- **FR-012**: Frontend MUST display error messages to users appropriately
+- **FR-013**: Frontend MUST include pages for [specific features]
+- **FR-014**: Frontend MUST redirect unauthenticated users to login page
+
+### Authentication Requirements
+
+- **FR-015**: System MUST support user signup via Better Auth (email/password)
+- **FR-016**: System MUST support user signin via Better Auth (email/password)
+- **FR-017**: System MUST generate and issue JWT tokens for authenticated sessions
+- **FR-018**: System MUST verify JWT tokens on all protected API endpoints
+- **FR-019**: System MUST allow users to logout and invalidate sessions
+- **FR-020**: System MUST ensure users can only access their own data
 
 ### Key Entities *(include if feature involves data)*
 
-- **[Entity 1]**: [What it represents, key attributes without implementation]
+- **[Entity 1]**: [What it represents, key attributes without implementation, user_id field required]
 - **[Entity 2]**: [What it represents, relationships to other entities]
+- **User**: Standard user entity (id, email, name, created_at) - managed by Better Auth
 
 ## Success Criteria *(mandatory)*
 

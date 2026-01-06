@@ -31,7 +31,31 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+### Phase Compliance
+
+- **Phase I (Console)**: In-memory storage, CLI interface, Python only
+- **Phase II (Web App)**:
+  - Backend: Python REST API (FastAPI)
+  - Database: Neon Serverless PostgreSQL
+  - ORM/Data Layer: SQLModel
+  - Frontend: Next.js (React, TypeScript)
+  - Authentication: Better Auth (signup/signin only)
+- **Phase III+ (Advanced)**: Cloud infrastructure, agents, AI (not applicable to Phase II)
+
+### Principle Validation
+
+- **Spec-Driven Development**: No implementation without spec → plan → tasks
+- **Phase Isolation**: No future phase technologies (no AI, agents, advanced cloud)
+- **Test-First**: Tests MUST exist before implementation (80% coverage minimum)
+- **Security by Design**: User data isolation, JWT auth, environment variables for secrets
+- **Technology Matrix Compliance**: All technologies align with current phase
+- **API-First Design**: REST APIs defined before implementation, JSON format
+
+### Gate Outcome
+
+- [ ] PASS: All principles satisfied → Proceed to Phase 0
+- [ ] FAIL WITH JUSTIFICATION: Violations documented and approved → Proceed with tracking
+- [ ] BLOCK: Critical violations → Amend spec or plan
 
 ## Project Structure
 
