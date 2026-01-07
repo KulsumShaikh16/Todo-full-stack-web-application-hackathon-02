@@ -42,6 +42,7 @@ def verify_cors(url, origin):
                 print("   The server did not return an Access-Control-Allow-Origin header.")
             else:
                 print(f"   The server returned '{allow_origin}' instead.")
+            print(f"\nResponse Body: {response.text}")
             
     except Exception as e:
         print(f"\nERROR: Request failed: {e}")

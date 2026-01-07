@@ -13,6 +13,11 @@ from routes.auth import router as auth_router
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Configure CORS
+# Robust parsing: strip whitespace and trailing slashes from each origin
+# We also convert to lowercase for comparison safety
+cors_origins_list = [origin.strip().rstrip("/").lower() for origin in settings.cors_origins.split(",") if origin.strip()]
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,7 +28,7 @@ async def lifespan(app: FastAPI):
     logger.info("Todo API application startup completed")
     logger.info("--- CORS Configuration ---")
     logger.info(f"Raw origins string: '{settings.cors_origins}'")
-    logger.info(f"Processed origins list: {cors_origins}")
+    logger.info(f"Processed origins list: {cors_origins_list}")
     logger.info("---------------------------")
     yield
     # Shutdown: Clean up if needed
@@ -37,13 +42,24 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Configure CORS
-# Robust parsing: strip whitespace and trailing slashes from each origin
-cors_origins = [origin.strip().rstrip("/") for origin in settings.cors_origins.split(",") if origin.strip()]
+# Add request logging middleware
+@app.middleware("http")
+async def log_requests(request, call_next):
+    logger.info(f"Incoming request: {request.method} {request.url}")
+    # Only log headers for OPTIONS or if specifically debugging to avoid log bloat
+    if request.method == "OPTIONS":
+        logger.info(f"OPTIONS Headers: {dict(request.headers)}")
+    
+    response = await call_next(request)
+    
+    if response.status_code >= 400:
+        logger.warning(f"Response status: {response.status_code} for {request.method} {request.url}")
+        
+    return response
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
