@@ -3,8 +3,10 @@
  * Provides signup, signin, logout, and token generation functionality
  */
 
+import { config } from '@/config';
+
 // Use environment variable for API URL, fallback to localhost for local development
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+const API_URL = config.apiUrl;
 
 interface SignupData {
   email: string;

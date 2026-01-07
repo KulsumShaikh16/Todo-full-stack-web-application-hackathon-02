@@ -88,6 +88,24 @@ Token payload must contain:
 | 404 | Task not found |
 | 400 | Validation error |
 
+## Deployment
+
+### CORS Notes
+
+When deploying the backend (e.g., to Railway or Render) and the frontend (e.g., to Vercel), you must ensure `CORS_ORIGINS` includes your production frontend URL.
+
+Example:
+```env
+CORS_ORIGINS=https://your-app.vercel.app,http://localhost:3000
+```
+
+### Frontend Configuration
+
+Ensure `NEXT_PUBLIC_API_URL` is set in your Vercel/frontend environment variables to point to your live backend:
+```env
+NEXT_PUBLIC_API_URL=https://your-backend.railway.app
+```
+
 ## Development
 
 ```bash

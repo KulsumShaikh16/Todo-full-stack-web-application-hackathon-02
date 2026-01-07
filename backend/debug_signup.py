@@ -4,9 +4,9 @@ import json
 url = "http://127.0.0.1:8000/api/auth/signup"
 headers = {"Content-Type": "application/json"}
 data = {
-    "email": "debug_test_123@example.com",
+    "email": "signup_test_999@example.com",
     "password": "password123",
-    "name": "Debug User"
+    "name": "Signup Test"
 }
 
 try:

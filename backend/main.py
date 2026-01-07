@@ -21,6 +21,7 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up Todo API application...")
     init_db()
     logger.info("Todo API application startup completed")
+    logger.info(f"CORS origins: {settings.cors_origins}")
     yield
     # Shutdown: Clean up if needed
     logger.info("Shutting down Todo API application...")
