@@ -21,7 +21,10 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up Todo API application...")
     init_db()
     logger.info("Todo API application startup completed")
-    logger.info(f"CORS origins: {settings.cors_origins}")
+    logger.info("--- CORS Configuration ---")
+    logger.info(f"Raw origins string: '{settings.cors_origins}'")
+    logger.info(f"Processed origins list: {cors_origins}")
+    logger.info("---------------------------")
     yield
     # Shutdown: Clean up if needed
     logger.info("Shutting down Todo API application...")
@@ -35,7 +38,9 @@ app = FastAPI(
 )
 
 # Configure CORS
-cors_origins = [origin.strip() for origin in settings.cors_origins.split(",")]
+# Robust parsing: strip whitespace and trailing slashes from each origin
+cors_origins = [origin.strip().rstrip("/") for origin in settings.cors_origins.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
