@@ -26,12 +26,14 @@ export default function SigninPage() {
     }
   }, [isAuthenticated, authLoading, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
+    setError("");
 
     try {
+      console.log("Attempting sign in via custom auth-client...");
+
       // Validate email
       if (!email.includes('@')) {
         setError('Please enter a valid email address');
@@ -47,13 +49,13 @@ export default function SigninPage() {
       }
 
       // Call Better Auth signin
-      const response = await signIn.email({
+      const result = await signIn.email({
         email,
         password,
       });
 
-      if (response.error) {
-        setError(response.error.message || 'Invalid credentials');
+      if (result.error) {
+        setError(result.error.message || 'Invalid credentials');
         setIsLoading(false);
         return;
       }
