@@ -14,7 +14,7 @@ import {
 } from '@/components/ui';
 import { LoadingPage } from '@/components/ui/loading';
 import { TodoItem } from '@/components/ui/todo-item';
-import { Plus, LogOut, ClipboardList, AlertCircle } from 'lucide-react';
+import { Plus, LogOut, ClipboardList, AlertCircle, Edit2, Trash2, Circle } from 'lucide-react';
 
 export default function TodosPage() {
   const { user, logout, isLoading: authLoading } = useAuth();
@@ -128,84 +128,104 @@ export default function TodosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <header className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-primary">My Todos</h1>
+    <div className="min-h-screen">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 glass">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
+              <ClipboardList className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <h1 className="text-xl font-bold tracking-tight">Todo Dashboard</h1>
+          </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user?.email || 'User'}
-            </span>
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              <LogOut size={16} className="mr-2" />
-              Sign Out
+            <div className="hidden sm:flex flex-col items-end">
+              <span className="text-sm font-semibold">{user?.email?.split('@')[0] || 'User'}</span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Premium Account</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="rounded-xl hover:bg-destructive/10 hover:text-destructive transition-all duration-300"
+              title="Sign Out"
+            >
+              <LogOut size={20} />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-3xl mx-auto px-6 pt-32 pb-12">
+        {/* Welcome Section */}
+        <div className="mb-10">
+          <h2 className="text-3xl font-bold tracking-tight mb-2">Welcome back!</h2>
+          <p className="text-muted-foreground">You have {todos.filter(t => !t.completed).length} pending tasks for today.</p>
+        </div>
+
         {/* Add todo form */}
-        <Card className="mb-8">
-          <CardContent className="pt-6">
-            <form onSubmit={handleCreateTodo} className="flex gap-4">
-              <Input
-                placeholder="What needs to be done?"
-                value={newTodoTitle}
-                onChange={(e) => setNewTodoTitle(e.target.value)}
-                disabled={isAdding}
-                className="flex-1"
-              />
-              <Button type="submit" disabled={isAdding || !newTodoTitle.trim()}>
-                {isAdding ? (
-                  'Adding...'
-                ) : (
-                  <>
-                    <Plus size={16} className="mr-2" />
-                    Add Todo
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="mb-12 glass rounded-2xl p-2 focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300">
+          <form onSubmit={handleCreateTodo} className="flex gap-2">
+            <Input
+              placeholder="Type your next big goal..."
+              value={newTodoTitle}
+              onChange={(e) => setNewTodoTitle(e.target.value)}
+              disabled={isAdding}
+              className="flex-1 h-14 bg-transparent border-none text-lg px-4 focus-visible:ring-0 shadow-none"
+            />
+            <Button
+              type="submit"
+              disabled={isAdding || !newTodoTitle.trim()}
+              className="h-14 w-14 rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-200"
+            >
+              <Plus size={24} />
+            </Button>
+          </form>
+        </div>
 
         {/* Error display */}
         {error && (
-          <div className="flex items-center gap-2 p-4 mb-4 rounded-md bg-destructive/10 text-destructive">
-            <AlertCircle size={16} />
-            <span>{error}</span>
+          <div className="flex items-center gap-3 p-4 mb-8 rounded-2xl bg-destructive/5 border border-destructive/20 text-destructive animate-in fade-in slide-in-from-top-2">
+            <AlertCircle size={20} />
+            <span className="font-medium text-sm">{error}</span>
           </div>
         )}
 
         {/* Todo list */}
         {todos.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <ClipboardList className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No todos yet</h3>
-              <p className="text-muted-foreground">
-                Add your first todo above to get started!
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
-              <span>{total} {total === 1 ? 'task' : 'tasks'}</span>
-              <span>
-                {todos.filter((t) => t.completed).length} completed
-              </span>
+          <div className="glass rounded-[2.5rem] py-20 text-center animate-in zoom-in-95 duration-500">
+            <div className="mx-auto w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center mb-6 border border-primary/20">
+              <ClipboardList className="w-10 h-10 text-primary" />
             </div>
-            {todos.map((todo) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                onToggle={handleToggle}
-                onDelete={handleDelete}
-                onUpdate={handleUpdate}
-              />
-            ))}
+            <h3 className="text-2xl font-bold mb-2">Clear horizon ahead</h3>
+            <p className="text-muted-foreground mb-8 max-w-xs mx-auto text-balance">
+              Your task list is empty. Take a moment to breathe or plan your next move.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Tasks</span>
+                <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs font-bold">{total}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Done</span>
+                <span className="bg-success/10 text-success px-2 py-0.5 rounded-full text-xs font-bold">
+                  {todos.filter((t) => t.completed).length}
+                </span>
+              </div>
+            </div>
+            <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {todos.map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  onToggle={handleToggle}
+                  onDelete={handleDelete}
+                  onUpdate={handleUpdate}
+                />
+              ))}
+            </div>
           </div>
         )}
       </main>
