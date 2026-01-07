@@ -61,11 +61,11 @@ export default function SigninPage() {
       }
 
       // Set auth state with token and user
-      if (response.data?.token && response.data?.user) {
-        const token = response.data.token;
+      if (result.data?.token && result.data?.user) {
+        const token = result.data.token;
         const user = {
-          id: response.data.user.id,
-          email: response.data.user.email,
+          id: result.data.user.id,
+          email: result.data.user.email,
         };
         setToken(token, user);
 
