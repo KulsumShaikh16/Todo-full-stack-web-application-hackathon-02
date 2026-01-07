@@ -33,22 +33,21 @@ def verify_cors(url, origin):
         print(f"  Access-Control-Allow-Headers: {allow_headers}")
         
         if allow_origin == origin:
-            print("\n✅ SUCCESS: Origin is correctly allowed!")
+            print("\nSUCCESS: Origin is correctly allowed!")
         elif allow_origin == "*":
-            print("\n✅ SUCCESS: All origins allowed (wildcard)")
+            print("\nSUCCESS: All origins allowed (wildcard)")
         else:
-            print("\n❌ FAILED: Origin is NOT allowed.")
+            print("\nFAILED: Origin is NOT allowed.")
             if not allow_origin:
                 print("   The server did not return an Access-Control-Allow-Origin header.")
             else:
                 print(f"   The server returned '{allow_origin}' instead.")
             
     except Exception as e:
-        print(f"\n❌ ERROR: Request failed: {e}")
+        print(f"\nERROR: Request failed: {e}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Verify CORS headers for a URL.")
-    parser.add_ecord = parser.add_argument_group("Required Arguments")
     parser.add_argument("--url", required=True, help="The API endpoint to test (e.g. http://localhost:8000/api/auth/signin)")
     parser.add_argument("--origin", required=True, help="The origin to simulate (e.g. https://your-app.vercel.app)")
     
