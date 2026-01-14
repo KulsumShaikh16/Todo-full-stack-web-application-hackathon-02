@@ -24,7 +24,23 @@ class ApiClient {
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
-      throw new Error(error.detail || 'An error occurred');
+      const errorMessage = error.detail || 'An error occurred';
+
+      // Check for token expiration or invalid token errors
+      if (response.status === 401 &&
+        (errorMessage.toLowerCase().includes('expired') ||
+          errorMessage.toLowerCase().includes('invalid token'))) {
+        // Clear the expired token
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_user');
+          // Redirect to signin page
+          window.location.href = '/signin';
+        }
+        throw new Error('Session expired. Please login again.');
+      }
+
+      throw new Error(errorMessage);
     }
     return response.json();
   }
@@ -75,7 +91,23 @@ class ApiClient {
     });
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
-      throw new Error(error.detail || 'An error occurred');
+      const errorMessage = error.detail || 'An error occurred';
+
+      // Check for token expiration or invalid token errors
+      if (response.status === 401 &&
+        (errorMessage.toLowerCase().includes('expired') ||
+          errorMessage.toLowerCase().includes('invalid token'))) {
+        // Clear the expired token
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_user');
+          // Redirect to signin page
+          window.location.href = '/signin';
+        }
+        throw new Error('Session expired. Please login again.');
+      }
+
+      throw new Error(errorMessage);
     }
   }
 

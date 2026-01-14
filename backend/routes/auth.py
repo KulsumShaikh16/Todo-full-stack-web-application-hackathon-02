@@ -43,7 +43,7 @@ def create_access_token(user_id: str, email: str) -> tuple[str, int]:
         Tuple of (token, expires_at_timestamp)
     """
     # Change token expiry to 24 hours (86400 seconds) as requested
-    expires_delta = timedelta(hours=24)
+    expires_delta = timedelta(days=7)  # Token expires after 7 days
     expire = datetime.utcnow() + expires_delta
 
     to_encode = {
