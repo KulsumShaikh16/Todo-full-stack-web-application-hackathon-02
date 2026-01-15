@@ -12,7 +12,7 @@ import {
 import { LoadingPage } from '@/components/ui/loading';
 import { TodoItem } from '@/components/ui/todo-item';
 import { cn } from '@/lib/utils';
-import { Plus, LogOut, ClipboardList, AlertCircle, Sparkles, LayoutDashboard, Search, Filter, Circle, Trophy, Zap } from 'lucide-react';
+import { Plus, LogOut, ClipboardList, AlertCircle, Sparkles, LayoutDashboard, Trophy, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TodosPage() {
