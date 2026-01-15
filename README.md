@@ -7,6 +7,7 @@ A comprehensive full-stack todo application built with modern web technologies, 
 - **Full-stack application**: Complete with both frontend and backend components
 - **Authentication**: Secure user registration and login functionality
 - **Todo Management**: Create, read, update, and delete todo items
+- **AI-Powered Chatbot**: Intelligent assistant to help manage tasks using Google Gemini AI
 - **Responsive UI**: Modern UI that works on desktop and mobile devices
 - **Secure API**: Protected endpoints with JWT authentication
 - **Database Integration**: PostgreSQL database with Neon for real-time data storage
@@ -26,6 +27,7 @@ A comprehensive full-stack todo application built with modern web technologies, 
 - **PostgreSQL**: Relational database (with Neon integration)
 - **JWT**: Secure authentication tokens
 - **Better Auth**: Complete authentication solution
+- **Google Gemini AI**: AI-powered chatbot functionality
 
 ### Development Tools
 - **Git**: Version control
@@ -63,6 +65,7 @@ Todo Full-Stack Web Application/
 - Node.js (v16 or higher)
 - Python (v3.9 or higher)
 - PostgreSQL or Neon database account
+- Google Gemini API Key (optional, for AI chatbot features)
 
 ### Backend Setup
 
@@ -94,13 +97,26 @@ Todo Full-Stack Web Application/
 5. Set up environment variables (use `.env.example` as reference):
    ```bash
    cp .env.example .env
-   # Edit .env with your actual configuration
+   # Edit .env with your actual configuration including:
+   # - DATABASE_URL: Your PostgreSQL connection string
+   # - BETTER_AUTH_SECRET: Your JWT secret
+   # - GEMINI_API_KEY: Your Google Gemini API key (required for chatbot)
+   # - GEMINI_MODEL: Model name (default: gemini-1.5-flash)
    ```
 
 6. Run the development server:
    ```bash
    python run_server.py
    ```
+
+### AI Chatbot Configuration
+
+To enable the AI chatbot functionality:
+
+1. Obtain a Google Gemini API key from [Google AI Studio](https://aistudio.google.com/)
+2. Add your `GEMINI_API_KEY` to the backend `.env` file
+3. Ensure the `GEMINI_MODEL` is set (default: gemini-1.5-flash)
+4. The chatbot will automatically be enabled when the backend starts successfully with the API key
 
 ### Frontend Setup
 
@@ -143,9 +159,22 @@ pytest
 ### Backend Deployment
 The backend can be deployed to platforms like:
 - Heroku
-- Railway
+- Railway (recommended)
 - Google Cloud Run
 - AWS Lambda
+
+When deploying the backend, make sure to set the following environment variables:
+- `DATABASE_URL`: Your PostgreSQL connection string
+- `BETTER_AUTH_SECRET`: Your JWT secret
+- `GEMINI_API_KEY`: Your Google Gemini API key (required for chatbot)
+- `GEMINI_MODEL`: Model name (default: gemini-1.5-flash)
+- `CORS_ORIGINS`: Comma-separated list of allowed origins (e.g., your frontend URL)
+
+#### Railway Specific Setup:
+1. Connect your GitHub repository to Railway
+2. Add the environment variables mentioned above in the Railway dashboard under Settings > Environment Variables
+3. Ensure your database is properly configured
+4. Deploy the application and note the backend URL for frontend configuration
 
 ### Frontend Deployment
 The frontend can be deployed to:
@@ -153,6 +182,9 @@ The frontend can be deployed to:
 - Netlify
 - GitHub Pages
 - AWS S3
+
+When deploying the frontend, ensure you set the following environment variable:
+- `NEXT_PUBLIC_API_URL`: Your deployed backend URL (e.g., your Railway app URL)
 
 ## 🤝 Contributing
 
