@@ -170,6 +170,12 @@ When deploying the backend, make sure to set the following environment variables
 - `GEMINI_MODEL`: Model name (default: gemini-1.5-flash)
 - `CORS_ORIGINS`: Comma-separated list of allowed origins (e.g., your frontend URL)
 
+⚠️ **Important**: If you're experiencing issues with the chatbot not showing responses or API calls failing,
+ensure your `CORS_ORIGINS` variable includes your frontend's domain exactly as it appears in the browser:
+- For local development: `http://localhost:3000,http://127.0.0.1:3000`
+- For Vercel deployment: Add your Vercel URL (e.g., `https://your-app.vercel.app`)
+- Example for both: `http://localhost:3000,https://your-app.vercel.app`
+
 #### Railway Specific Setup:
 1. Connect your GitHub repository to Railway
 2. Add the environment variables mentioned above in the Railway dashboard under Settings > Environment Variables
