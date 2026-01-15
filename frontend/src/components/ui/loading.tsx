@@ -12,20 +12,19 @@ export function LoadingSpinner({ className }: { className?: string }) {
 
 export function LoadingPage() {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/80 backdrop-blur-xl animate-in fade-in duration-500">
-      <div className="flex flex-col items-center gap-6">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/80 backdrop-blur-xl animate-in fade-in duration-500">
+      <div className="flex flex-col items-center gap-8">
         <div className="relative">
-          <div className="bg-primary p-4 rounded-[2rem] shadow-2xl shadow-primary/40 animate-pulse">
-            <CheckCircle className="w-12 h-12 text-primary-foreground" />
+          <div className="bg-blue-600 p-4 rounded-[2rem] shadow-2xl shadow-blue-600/40 animate-pulse">
+            <CheckCircle className="w-12 h-12 text-white" />
           </div>
-          <div className="absolute -inset-4 border border-primary/20 rounded-[2.5rem] animate-spin-slow" />
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-2xl font-black tracking-tighter text-gradient animate-pulse">FocusFlow</p>
-          <div className="flex items-center gap-1.5">
-            <div className="w-1 h-1 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]" />
-            <div className="w-1 h-1 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]" />
-            <div className="w-1 h-1 rounded-full bg-primary animate-bounce" />
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-3xl font-bold tracking-tighter text-white animate-pulse">FocusFlow</p>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.3s]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:-0.15s]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce" />
           </div>
         </div>
       </div>

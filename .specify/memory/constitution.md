@@ -150,15 +150,40 @@ Enables parallel development, clear contracts, testable interfaces, and maintain
 - No advanced analytics
 - No future phase features
 
-### Phase III+: Advanced Features (Future)
-**Scope**: Enhanced capabilities with cloud infrastructure and AI
+### Phase III: AI Chatbot (Current)
+**Scope**: Natural language todo management via AI chatbot
+**Technology**:
+- Backend: Python FastAPI (continues from Phase II)
+- Database: Neon Serverless PostgreSQL (continues from Phase II)
+- ORM/Data Layer: SQLModel (continues from Phase II)
+- Frontend: Next.js with custom React Chat UI
+- Authentication: Better Auth with JWT (continues from Phase II)
+- AI Framework: Google Gemini API
+- Agent Orchestration: LangChain with Gemini
+- Tool Protocol: MCP (Model Context Protocol)
+**Features**:
+- Natural language task management
+- MCP tools for todo CRUD operations
+- Conversation persistence in database
+- Stateless chat endpoint architecture
+- Chat history and context management
+**Constraints**:
+- No voice input/output
+- No multi-language support
+- No task scheduling/reminders
+- No collaborative todos
+- No real-time notifications
+- No future phase features
+
+### Phase IV+: Advanced Features (Future)
+**Scope**: Enhanced capabilities with advanced infrastructure
 **Technology**:
 - Advanced cloud infrastructure
-- Agent frameworks
-- AI/ML integration
-- Orchestration systems
+- Multi-modal AI capabilities
+- Real-time features
+- Advanced analytics
 **Constraints**:
-- Defined in Phase III specification
+- Defined in Phase IV specification
 - Not to be introduced earlier
 
 ## Development Workflow
@@ -257,4 +282,5 @@ This constitution is the authoritative source for all technical decisions. It su
 - **MINOR** (0.X.0): New principle or section added, material guidance expansion
 - **PATCH** (0.0.X): Clarifications, wording fixes, non-semantic refinements
 
-**Version**: 1.0.0 | **Ratified**: 2025-01-02 | **Last Amended**: 2025-01-02
+**Version**: 2.0.0 | **Ratified**: 2025-01-02 | **Last Amended**: 2026-01-14 (Phase III added)
+

@@ -21,10 +21,23 @@ class ApiClient {
     return headers;
   }
 
+  async fetch<T>(path: string, options: RequestInit = {}): Promise<T> {
+    const response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: {
+        ...this.getHeaders(),
+        ...options.headers,
+      },
+    });
+    return this.handleResponse(response);
+  }
+
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
       const errorMessage = error.detail || 'An error occurred';
+
+      console.error(`API Error: ${response.status} ${response.url}`, error);
 
       // Check for token expiration or invalid token errors
       if (response.status === 401 &&
@@ -42,7 +55,23 @@ class ApiClient {
 
       throw new Error(errorMessage);
     }
-    return response.json();
+
+    // Handle 204 No Content or empty response body
+    if (response.status === 204 || response.headers.get('content-length') === '0') {
+      return {} as T;
+    }
+
+    const text = await response.text();
+    if (!text) {
+      return {} as T;
+    }
+
+    try {
+      return JSON.parse(text) as T;
+    } catch (e) {
+      console.error('Failed to parse JSON response:', text);
+      throw new Error('Invalid server response format');
+    }
   }
 
   // Health check (no auth required)
@@ -53,70 +82,37 @@ class ApiClient {
 
   // Todo CRUD operations
   async getTasks(): Promise<TodoListResponse> {
-    const response = await fetch(`${API_URL}/api/tasks`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
+    return this.fetch<TodoListResponse>('/api/tasks');
   }
 
   async getTask(id: number): Promise<Todo> {
-    const response = await fetch(`${API_URL}/api/tasks/${id}`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
+    return this.fetch<Todo>(`/api/tasks/${id}`);
   }
 
   async createTask(data: TodoCreate): Promise<Todo> {
-    const response = await fetch(`${API_URL}/api/tasks`, {
+    return this.fetch<Todo>('/api/tasks', {
       method: 'POST',
-      headers: this.getHeaders(),
       body: JSON.stringify(data),
     });
-    return this.handleResponse(response);
   }
 
   async updateTask(id: number, data: TodoUpdate): Promise<Todo> {
-    const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+    return this.fetch<Todo>(`/api/tasks/${id}`, {
       method: 'PUT',
-      headers: this.getHeaders(),
       body: JSON.stringify(data),
     });
-    return this.handleResponse(response);
   }
 
   async deleteTask(id: number): Promise<void> {
-    const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+    await this.fetch<void>(`/api/tasks/${id}`, {
       method: 'DELETE',
-      headers: this.getHeaders(),
     });
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
-      const errorMessage = error.detail || 'An error occurred';
-
-      // Check for token expiration or invalid token errors
-      if (response.status === 401 &&
-        (errorMessage.toLowerCase().includes('expired') ||
-          errorMessage.toLowerCase().includes('invalid token'))) {
-        // Clear the expired token
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('auth_token');
-          localStorage.removeItem('auth_user');
-          // Redirect to signin page
-          window.location.href = '/signin';
-        }
-        throw new Error('Session expired. Please login again.');
-      }
-
-      throw new Error(errorMessage);
-    }
   }
 
   async toggleComplete(id: number): Promise<Todo> {
-    const response = await fetch(`${API_URL}/api/tasks/${id}/complete`, {
+    return this.fetch<Todo>(`/api/tasks/${id}/complete`, {
       method: 'PATCH',
-      headers: this.getHeaders(),
     });
-    return this.handleResponse(response);
   }
 }
 

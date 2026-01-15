@@ -13,6 +13,7 @@ from models import (
     TodoUpdate,
     TodoResponse,
     TodoListResponse,
+    User,
 )
 
 
@@ -72,17 +73,25 @@ async def list_tasks(
     Returns:
         List of tasks owned by the user with pagination info
     """
+    user_id = current_user.sub
+    user_exists = db.get(User, user_id)
+    if not user_exists:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User record not found. Please sign out and sign up again.",
+        )
+
     # Count total tasks for user
     count_query = (
         select(func.count(Todo.id))
-        .where(Todo.user_id == current_user.sub)
+        .where(Todo.user_id == user_id)
     )
     total = db.execute(count_query).scalar() or 0
 
     # Fetch tasks with pagination and user filtering
     query = (
         select(Todo)
-        .where(Todo.user_id == current_user.sub)
+        .where(Todo.user_id == user_id)
         .order_by(Todo.created_at.desc())
         .offset(skip)
         .limit(limit)
@@ -111,8 +120,16 @@ async def create_task(
     Returns:
         The created task
     """
+    user_id = current_user.sub
+    user_exists = db.get(User, user_id)
+    if not user_exists:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User record not found. Please sign out and sign up again.",
+        )
+
     task = Todo(
-        user_id=current_user.sub,
+        user_id=user_id,
         title=task_data.title,
         description=task_data.description,
         completed=False,

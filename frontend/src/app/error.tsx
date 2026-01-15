@@ -39,8 +39,8 @@ export default function Error({
                         <AlertTriangle className="w-12 h-12 text-destructive animate-pulse" />
                     </div>
 
-                    <h1 className="text-4xl font-black tracking-tighter mb-4">Something went wrong</h1>
-                    <p className="text-muted-foreground mb-10 leading-relaxed">
+                    <h1 className="text-4xl font-black tracking-tighter mb-4 text-white">Something went wrong</h1>
+                    <p className="text-zinc-400 mb-10 leading-relaxed font-medium">
                         Even the best flows hit a snag. We've logged the error and are working on a fix.
                     </p>
 
@@ -54,7 +54,7 @@ export default function Error({
                             Try Again
                         </Button>
                         <Link href="/">
-                            <Button size="lg" variant="ghost" className="h-12 px-10 rounded-2xl font-bold opacity-60 hover:opacity-100 transition-all">
+                            <Button size="lg" variant="ghost" className="h-12 px-10 rounded-2xl font-bold text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
                                 Back to Dashboard
                             </Button>
                         </Link>

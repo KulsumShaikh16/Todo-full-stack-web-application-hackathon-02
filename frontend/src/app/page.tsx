@@ -2,10 +2,11 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Shield, Zap } from 'lucide-react';
+import { CheckCircle, Shield, Zap, Sparkles, LayoutDashboard, Terminal, MessageSquare, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -23,144 +24,182 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-blue-500/30">
+      {/* Background Decor */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px]"></div>
+      </div>
+
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/10 glass">
+      <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-white/5 bg-black/60 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
-              <CheckCircle className="w-6 h-6 text-primary-foreground" />
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-3"
+          >
+            <div className="bg-blue-600 p-2 rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+              <LayoutDashboard size={20} className="text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tight">FocusFlow</span>
-          </div>
+            <span className="text-xl font-bold tracking-tight text-gradient">FocusFlow</span>
+          </motion.div>
+
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</Link>
-            <Link href="/token" className="text-sm font-medium hover:text-primary transition-colors">API Token</Link>
+            <Link href="#features" className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Features</Link>
+            <Link href="/token" className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">API</Link>
           </nav>
-          <div className="flex items-center gap-4">
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-4"
+          >
             <Link href="/signin">
-              <Button variant="ghost" className="font-medium">Sign In</Button>
+              <Button variant="ghost" className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white">Sign In</Button>
             </Link>
             <Link href="/signin">
-              <Button className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 px-6">
+              <Button className="bg-white text-black hover:bg-zinc-200 shadow-xl px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95">
                 Get Started
               </Button>
             </Link>
-          </div>
+          </motion.div>
         </div>
       </header>
 
-      <main>
+      <main className="relative z-10">
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full -z-10">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]" />
-            <div className="absolute bottom-[10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-blue-400/10 blur-[120px]" />
-          </div>
+        <section className="relative pt-48 pb-32 px-6 overflow-hidden">
+          <div className="max-w-5xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-10"
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Enhanced with AI Intelligence</span>
+            </motion.div>
 
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <Zap className="w-3 h-3" />
-              <span>THE FUTURE OF TASK MANAGEMENT</span>
-            </div>
-            <h2 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]">
-              Manage your tasks with <br />
-              <span className="text-gradient">unmatched ease</span>
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-              FocusFlow is a minimalist, secure, and lightning-fast task management system
-              designed for high-performance teams and individuals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-6xl md:text-8xl font-bold tracking-tighter mb-10 leading-[0.95]"
+            >
+              Master Focus. <br />
+              <span className="text-blue-600">Own Results.</span>
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-14 leading-relaxed font-medium"
+            >
+              FocusFlow is a premium, AI-orchestrated task management platform designed for the next generation of high-performance developers.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            >
               <Link href="/signin">
-                <Button size="lg" className="h-14 px-10 text-lg shadow-xl shadow-primary/25 hover:scale-105 transition-transform duration-200">
-                  Join FocusFlow
+                <Button size="lg" className="h-16 px-12 text-sm font-bold uppercase tracking-widest bg-blue-600 hover:bg-blue-500 shadow-[0_0_30px_rgba(37,99,235,0.4)] rounded-2xl group active:scale-95 transition-all">
+                  Join Workspace
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link href="/token" className="text-sm font-semibold flex items-center gap-2 hover:text-primary transition-colors group">
-                Looking for the API?
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              <Link href="/token" className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3 text-zinc-500 hover:text-white transition-colors py-4">
+                <Terminal size={16} />
+                Access Developer API
               </Link>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Features Grid */}
-        <section id="features" className="max-w-7xl mx-auto px-6 py-24">
+        <section id="features" className="max-w-7xl mx-auto px-6 py-32">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="glass group hover:border-primary/40 transition-all duration-300 hover:-translate-y-2">
-              <CardHeader className="p-8">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
-                  <CheckCircle className="w-7 h-7" />
-                </div>
-                <CardTitle className="text-2xl mb-3">Simple & Intuitive</CardTitle>
-                <CardDescription className="text-base text-muted-foreground leading-relaxed">
-                  A distraction-free interface designed to keep you in flow state,
-                  making task management feel like a breeze.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="glass group hover:border-primary/40 transition-all duration-300 hover:-translate-y-2">
-              <CardHeader className="p-8">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
-                  <Shield className="w-7 h-7" />
-                </div>
-                <CardTitle className="text-2xl mb-3">Enterprise Security</CardTitle>
-                <CardDescription className="text-base text-muted-foreground leading-relaxed">
-                  Your data is protected with industry-standard JWT encryption and
-                  Better Auth infrastructure.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="glass group hover:border-primary/40 transition-all duration-300 hover:-translate-y-2">
-              <CardHeader className="p-8">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
-                  <Zap className="w-7 h-7" />
-                </div>
-                <CardTitle className="text-2xl mb-3">Ultra Fast</CardTitle>
-                <CardDescription className="text-base text-muted-foreground leading-relaxed">
-                  Built on Next.js 14 and edge computing, ensuring 0ms lag
-                  when switching between your tasks.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <FeatureCard
+              icon={<Sparkles size={28} />}
+              title="AI Orchestration"
+              description="Harness the power of AI to generate, organize, and prioritize your missions through natural language."
+            />
+            <FeatureCard
+              icon={<Shield size={28} />}
+              title="Enterprise Grade"
+              description="Architected with JWT encryption and robust infrastructure to ensure your workspace remains private and secure."
+            />
+            <FeatureCard
+              icon={<Zap size={28} />}
+              title="Hyper Fast"
+              description="Engineered on Next.js 14 and Neon DB for sub-100ms latency across all global operations."
+            />
           </div>
         </section>
 
-        {/* Call to Action */}
-        <section className="py-24 px-6 text-center">
-          <div className="max-w-3xl mx-auto glass rounded-[2.5rem] p-12 md:p-20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-3xl" />
-            <h3 className="text-3xl md:text-5xl font-bold mb-6">Ready to elevate your focus?</h3>
-            <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-              Join thousands of users who have streamlined their day with FocusFlow.
-            </p>
-            <Link href="/signin">
-              <Button size="lg" className="h-14 px-12 text-lg shadow-lg shadow-primary/20">
-                Get Started for Free
-              </Button>
-            </Link>
-          </div>
+        {/* CTA Section */}
+        <section className="py-32 px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto relative overflow-hidden rounded-[3rem] border border-white/5"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-purple-600/10 backdrop-blur-3xl"></div>
+            <div className="relative p-12 md:p-24 text-center">
+              <h3 className="text-4xl md:text-6xl font-bold tracking-tighter mb-8 italic">Optimize your pipeline now.</h3>
+              <p className="text-lg text-zinc-400 mb-12 max-w-xl mx-auto font-medium">
+                The most advanced task management interface ever built for developers. 100% free while in beta.
+              </p>
+              <Link href="/signin">
+                <Button size="lg" className="h-16 px-12 text-sm font-bold uppercase tracking-widest bg-white text-black hover:bg-zinc-200 shadow-2xl rounded-2xl active:scale-95 transition-all">
+                  Initialize FocusFlow
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </section>
       </main>
 
-      <footer className="border-t border-white/5 py-12 mt-12 bg-slate-950/5">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 opacity-60">
-            <CheckCircle className="w-5 h-5" />
-            <span className="font-bold">FocusFlow</span>
+      <footer className="border-t border-white/5 py-16 bg-black/40">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex items-center gap-3 opacity-80">
+            <div className="bg-zinc-800 p-1.5 rounded-lg">
+              <LayoutDashboard size={16} />
+            </div>
+            <span className="font-bold tracking-tight text-lg">FocusFlow</span>
           </div>
-          <div className="text-sm text-muted-foreground">
-            &copy; 2024 FocusFlow Inc. Crafted with precision for high performance.
+          <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] text-center">
+            &copy; 2026 FOCUSFLOW CORE OPERATIONS. CRAFTED FOR PERFORMANCE.
           </div>
-          <div className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
-            <Link href="#" className="hover:text-primary">Privacy</Link>
-            <Link href="#" className="hover:text-primary">Terms</Link>
+          <div className="flex items-center gap-8 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+            <Link href="#" className="hover:text-blue-500 transition-colors">Documentation</Link>
+            <Link href="#" className="hover:text-blue-500 transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-blue-500 transition-colors">Legal</Link>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+  return (
+    <motion.div
+      whileHover={{ y: -8 }}
+      className="bg-zinc-900/40 border border-white/5 p-10 rounded-[2.5rem] backdrop-blur-xl group hover:border-blue-500/30 transition-all duration-500"
+    >
+      <div className="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center mb-8 border border-white/5 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-2xl">
+        {icon}
+      </div>
+      <h3 className="text-2xl font-bold mb-4 tracking-tight">{title}</h3>
+      <p className="text-zinc-500 font-medium leading-relaxed group-hover:text-zinc-400 transition-colors">
+        {description}
+      </p>
+    </motion.div>
   );
 }

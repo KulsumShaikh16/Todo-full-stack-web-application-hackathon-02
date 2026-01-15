@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Todo } from '@/types';
-import { Button } from './button';
-import { Card, CardContent, CardHeader, CardTitle } from './card';
 import { formatDateTime, cn } from '@/lib/utils';
-import { Check, Trash2, Edit2, X, Circle } from 'lucide-react';
+import { Check, Trash2, Edit2, X, Clock, Hash, Calendar, ArrowRight } from 'lucide-react';
 
 interface TodoItemProps {
   todo: Todo;
@@ -28,7 +27,6 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this task?')) return;
     try {
       await onDelete(todo.id);
     } catch (error) {
@@ -55,104 +53,124 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
   };
 
   return (
-    <div className={cn(
-      'group glass rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]',
-      todo.completed && 'bg-white/40 dark:bg-slate-900/40 opacity-70'
-    )}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4 flex-1 min-w-0">
-          <button
-            onClick={handleToggle}
-            className={cn(
-              'mt-1 w-6 h-6 rounded-full border-2 transition-all duration-300 flex items-center justify-center shrink-0',
-              todo.completed
-                ? 'bg-success border-success text-success-foreground'
-                : 'border-muted-foreground/30 hover:border-primary'
-            )}
-            title={todo.completed ? 'Mark as incomplete' : 'Mark as complete'}
-          >
-            {todo.completed && <Check size={14} strokeWidth={3} />}
-          </button>
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileHover={{ y: -2 }}
+      className={cn(
+        'group relative overflow-hidden rounded-2xl border transition-all duration-300',
+        todo.completed
+          ? 'bg-zinc-900/10 border-white/5 opacity-40'
+          : 'bg-zinc-900/40 border-white/10 hover:border-blue-500/30 hover:bg-zinc-900/60 shadow-lg'
+      )}
+    >
+      {/* Active Indicator */}
+      {!todo.completed && (
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      )}
 
-          <div className="flex-1 min-w-0">
+      <div className="p-4 flex items-start gap-4">
+        {/* Toggle Button */}
+        <button
+          onClick={handleToggle}
+          className={cn(
+            'mt-1 w-6 h-6 rounded-full border-2 transition-all duration-300 flex items-center justify-center shrink-0',
+            todo.completed
+              ? 'bg-blue-500 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
+              : 'border-zinc-800 hover:border-blue-500 hover:scale-110 active:scale-90 bg-black/20'
+          )}
+        >
+          {todo.completed && <Check size={12} strokeWidth={4} />}
+        </button>
+
+        <div className="flex-1 min-w-0">
+          <AnimatePresence mode="wait">
             {isEditing ? (
-              <input
-                type="text"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                className="w-full bg-transparent border-none p-0 text-lg font-semibold focus:ring-0 mb-1"
-                autoFocus
-                disabled={isUpdating}
-              />
-            ) : (
-              <h3
-                className={cn(
-                  'text-lg font-semibold break-words transition-all mb-1',
-                  todo.completed && 'line-through text-muted-foreground/60'
-                )}
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="flex items-center gap-2"
               >
-                {todo.title}
-              </h3>
-            )}
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="flex-1 bg-zinc-800/50 border border-white/10 rounded-lg px-3 py-1 text-base font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 text-white placeholder-zinc-500"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSave();
+                    if (e.key === 'Escape') handleCancel();
+                  }}
+                  disabled={isUpdating}
+                />
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleSave}
+                    className="p-1 px-2 rounded-lg bg-blue-600 text-white text-[10px] font-bold uppercase transition-all hover:bg-blue-500 disabled:opacity-50"
+                    disabled={isUpdating}
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="p-1 px-2 rounded-lg bg-zinc-800 text-zinc-400 text-[10px] font-bold uppercase transition-all hover:bg-zinc-700"
+                    disabled={isUpdating}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* Task ID Badge */}
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-500/5 border border-blue-500/10 text-blue-400 text-[9px] font-bold uppercase tracking-widest">
+                    ID #{String(todo.id).padStart(3, '0')}
+                  </span>
 
-            {todo.description && (
-              <p className={cn(
-                'text-sm text-muted-foreground mb-3 break-words',
-                todo.completed && 'line-through opacity-50'
-              )}>
-                {todo.description}
-              </p>
-            )}
-
-            <div className="flex items-center gap-4">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
-                {formatDateTime(todo.created_at)}
-              </span>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {isEditing ? (
-                  <>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={handleSave}
-                      disabled={isUpdating}
-                      className="text-xs h-7 px-3 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg"
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={handleCancel}
-                      disabled={isUpdating}
-                      className="text-xs h-7 w-7 p-0 rounded-lg"
-                    >
-                      <X size={14} />
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
-                      title="Edit task"
-                    >
-                      <Edit2 size={14} />
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                      title="Delete task"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </>
-                )}
+                  <h3
+                    className={cn(
+                      'text-base font-semibold tracking-tight break-words transition-all duration-300',
+                      todo.completed ? 'text-zinc-600 line-through' : 'text-zinc-100'
+                    )}
+                  >
+                    {todo.title}
+                  </h3>
+                </div>
               </div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex items-center justify-between mt-3">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
+                <Calendar size={10} className="text-zinc-600" />
+                {formatDateTime(todo.created_at)}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="p-1.5 rounded-lg hover:bg-white/5 text-zinc-500 hover:text-blue-400 transition-all"
+                title="Edit Task"
+              >
+                <Edit2 size={13} />
+              </button>
+              <button
+                onClick={handleDelete}
+                className="p-1.5 rounded-lg hover:bg-red-500/10 text-zinc-500 hover:text-red-400 transition-all"
+                title="Delete Task"
+              >
+                <Trash2 size={13} />
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

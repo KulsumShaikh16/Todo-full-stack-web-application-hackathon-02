@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Generator
 from sqlmodel import create_engine, Session, SQLModel, select, text
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from models import User, Todo
+from models import User, Todo, Conversation, Message
 import uuid
 from passlib.context import CryptContext
 
@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     backend_port: int = 8000
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
     jwt_expiration_minutes: int = 60  # Token expires after 60 minutes
+    gemini_api_key: str
+    gemini_model: str = "gemini-1.5-flash"
 
 
 from pydantic import ValidationError

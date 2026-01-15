@@ -38,7 +38,7 @@ def run_debug():
             print(auth_data)
             return
             
-        print("✅ Authenticated. Token obtained.")
+        print("Authenticated. Token obtained.")
         
         # 2. Create Task
         tasks_url = f"{BASE_URL}/api/tasks"
@@ -58,12 +58,12 @@ def run_debug():
         print(f"Response: {resp.text}")
         
         if resp.status_code == 201:
-            print("✅ Task created successfully")
+            print("Task created successfully")
         else:
-            print("❌ Task creation failed")
+            print("Task creation failed")
             
     except Exception as e:
-        print(f"❌ Exception occurred: {e}")
+        print(f"Exception occurred: {e}")
 
 if __name__ == "__main__":
     run_debug()

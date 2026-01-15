@@ -22,12 +22,12 @@ def test_cors():
                 print(f"  {k}: {v}")
                 
         if response.headers.get('access-control-allow-origin') == origin:
-            print("✅ Preflight Allow-Origin correct")
+            print("Preflight Allow-Origin correct")
         else:
-            print("❌ Preflight Allow-Origin MISSING or incorrect")
+            print("Preflight Allow-Origin MISSING or incorrect")
             
     except Exception as e:
-        print(f"❌ OPTIONS request failed: {e}")
+        print(f"OPTIONS request failed: {e}")
 
     # Test GET (Actual request simulation)
     print("\n--- Testing GET request ---")
@@ -44,12 +44,12 @@ def test_cors():
                 print(f"  {k}: {v}")
                 
         if response.headers.get('access-control-allow-origin') == origin:
-            print("✅ GET Allow-Origin correct")
+            print("GET Allow-Origin correct")
         else:
-            print("❌ GET Allow-Origin MISSING or incorrect")
+            print("GET Allow-Origin MISSING or incorrect")
 
     except Exception as e:
-        print(f"❌ GET request failed: {e}")
+        print(f"GET request failed: {e}")
 
 if __name__ == "__main__":
     test_cors()

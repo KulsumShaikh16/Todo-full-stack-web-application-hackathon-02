@@ -8,16 +8,29 @@ from fastapi.middleware.cors import CORSMiddleware
 from db import init_db, settings
 from routes.tasks import router as tasks_router
 from routes.auth import router as auth_router
+from routes.chat import router as chat_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Configure CORS
-# Robust parsing: strip whitespace and trailing slashes from each origin
-# We also convert to lowercase for comparison safety
-cors_origins_list = [origin.strip().rstrip("/").lower() for origin in settings.cors_origins.split(",") if origin.strip()]
+# Process CORS origins to handle various common formats
+cors_origins_list = []
+if settings.cors_origins:
+    for origin in settings.cors_origins.split(","):
+        trimmed = origin.strip().rstrip("/").lower()
+        if trimmed:
+            cors_origins_list.append(trimmed)
+            # Add both http and https versions if not specified, 
+            # and both localhost and 127.0.0.1
+            if "localhost" in trimmed:
+                cors_origins_list.append(trimmed.replace("localhost", "127.0.0.1"))
+            elif "127.0.0.1" in trimmed:
+                cors_origins_list.append(trimmed.replace("127.0.0.1", "localhost"))
 
+# Ensure we don't have duplicates
+cors_origins_list = list(set(cors_origins_list))
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -68,6 +81,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(tasks_router)
+app.include_router(chat_router)
 
 
 @app.get("/health")
