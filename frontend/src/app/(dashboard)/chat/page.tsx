@@ -18,13 +18,16 @@ export default function ChatPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [initialLoading, setInitialLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const loadConversations = useCallback(async () => {
+        setError(null);
         try {
             const data = await chatApi.getConversations();
             setConversations(data.conversations);
         } catch (err) {
             console.error('Failed to load conversations', err);
+            setError('Failed to load conversations');
         } finally {
             setInitialLoading(false);
         }
@@ -32,12 +35,14 @@ export default function ChatPage() {
 
     const loadMessages = useCallback(async (id: number) => {
         setIsLoading(true);
+        setError(null);
         try {
             const data = await chatApi.getConversation(id);
             setMessages(data.messages);
             setActiveConversationId(id);
         } catch (err) {
             console.error('Failed to load messages', err);
+            setError('Failed to load message history');
         } finally {
             setIsLoading(false);
         }
@@ -62,6 +67,7 @@ export default function ChatPage() {
         };
         setMessages((prev) => [...prev, tempUserMsg]);
         setIsLoading(true);
+        setError(null);
 
         try {
             const response = await chatApi.sendMessage(text, activeConversationId);
@@ -81,6 +87,7 @@ export default function ChatPage() {
             setMessages((prev) => [...prev, assistantMsg]);
         } catch (err) {
             console.error('Failed to send message', err);
+            setError(err instanceof Error ? err.message : 'Failed to get a response from the AI');
         } finally {
             setIsLoading(false);
         }
@@ -174,6 +181,22 @@ export default function ChatPage() {
 
                 {/* Chat Content */}
                 <div className="flex-1 relative overflow-hidden flex flex-col">
+                    {error && (
+                        <div className="mx-6 mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+                                    <X size={14} />
+                                </div>
+                                <span className="font-medium">{error}</span>
+                            </div>
+                            <button
+                                onClick={() => setError(null)}
+                                className="text-red-400/50 hover:text-red-400 transition-colors"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                    )}
                     <ChatContainer messages={messages} isLoading={isLoading} />
                 </div>
 

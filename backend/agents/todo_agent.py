@@ -55,11 +55,9 @@ async def run_todo_agent(user_id: str, message: str, history: list = None) -> di
         system_instruction=SYSTEM_PROMPT
     )
     
-    # Start chat with history
-    chat = model.start_chat(history=history or [])
-    
-    # Send user message
+    # Start chat with history and send message
     try:
+        chat = model.start_chat(history=history or [])
         response = chat.send_message(message)
     except Exception as e:
         logger.error(f"Error sending message to Gemini: {e}")
