@@ -170,11 +170,19 @@ When deploying the backend, make sure to set the following environment variables
 - `GEMINI_MODEL`: Model name (default: gemini-1.5-flash)
 - `CORS_ORIGINS`: Comma-separated list of allowed origins (e.g., your frontend URL)
 
-⚠️ **Important**: If you're experiencing issues with the chatbot not showing responses or API calls failing,
+⚠️ **Important**: If you're experiencing issues with the chatbot not showing responses, sign-in/sign-up errors ("failed to fetch"), or API calls failing,
 ensure your `CORS_ORIGINS` variable includes your frontend's domain exactly as it appears in the browser:
+
+Common issues and solutions:
+- **Sign-in/Sign-up errors**: Often caused by incorrect CORS configuration or wrong backend URL
+- **"Failed to fetch" errors**: Usually indicates a communication problem between frontend and backend
+- **Empty chat responses**: Could be due to missing GEMINI_API_KEY or CORS issues
+
+Troubleshooting steps:
 - For local development: `http://localhost:3000,http://127.0.0.1:3000`
 - For Vercel deployment: Add your Vercel URL (e.g., `https://your-app.vercel.app`)
 - Example for both: `http://localhost:3000,https://your-app.vercel.app`
+- Make sure `NEXT_PUBLIC_API_URL` in your frontend points to your backend URL
 
 #### Railway Specific Setup:
 1. Connect your GitHub repository to Railway
@@ -191,6 +199,27 @@ The frontend can be deployed to:
 
 When deploying the frontend, ensure you set the following environment variable:
 - `NEXT_PUBLIC_API_URL`: Your deployed backend URL (e.g., your Railway app URL)
+
+### Troubleshooting Common Issues
+
+#### Sign-In/Sign-Up "Failed to Fetch" Errors
+1. **Verify API URL**: Ensure `NEXT_PUBLIC_API_URL` in your frontend environment points to your deployed backend
+2. **Check CORS Configuration**: Confirm `CORS_ORIGINS` in your backend includes your frontend domain
+3. **Network Issues**: Check if your backend is running and accessible at the specified URL
+4. **Browser Console**: Look for specific error messages in developer tools (F12)
+
+#### Chatbot Not Responding
+1. **API Key**: Ensure `GEMINI_API_KEY` is set in your backend environment variables
+2. **Model Availability**: Confirm the `GEMINI_MODEL` is available and properly configured
+3. **CORS Issues**: Same as above - ensure proper CORS configuration
+4. **Authentication**: Make sure you're logged in when using chat functionality
+
+#### Testing Backend Connectivity
+You can test if your backend is accessible using:
+```bash
+curl -X GET "YOUR_BACKEND_URL/health"
+```
+This should return a health status if the backend is running properly.
 
 ## 🤝 Contributing
 
