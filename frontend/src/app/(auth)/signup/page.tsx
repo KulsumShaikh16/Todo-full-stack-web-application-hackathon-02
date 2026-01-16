@@ -15,7 +15,6 @@ import Link from 'next/link';
 export default function SignupPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -34,11 +33,7 @@ export default function SignupPage() {
         setIsLoading(true);
 
         try {
-            if (password !== confirmPassword) {
-                setError('Passwords do not match');
-                setIsLoading(false);
-                return;
-            }
+
 
             if (password.length < 8) {
                 setError('Password must be at least 8 characters');
@@ -140,7 +135,7 @@ export default function SignupPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Callsign</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Name</Label>
                                 <Input
                                     type="text"
                                     placeholder="Operative Name"
@@ -151,7 +146,7 @@ export default function SignupPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Email Node</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Email</Label>
                                 <Input
                                     type="email"
                                     placeholder="name@nexus.com"
@@ -165,7 +160,7 @@ export default function SignupPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Access Key</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Password</Label>
                                 <Input
                                     type="password"
                                     placeholder="••••••••"
@@ -177,19 +172,8 @@ export default function SignupPage() {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Confirm Password</Label>
-                                <Input
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                    minLength={8}
-                                    className="h-14 bg-black/40 border-white/10 focus:border-blue-500/50 rounded-2xl px-6 transition-all text-white placeholder-zinc-700 font-semibold"
-                                />
-                            </div>
                         </div>
+
 
                         <Button
                             type="submit"
@@ -202,7 +186,7 @@ export default function SignupPage() {
                                     <span>Provisioning...</span>
                                 </div>
                             ) : (
-                                'Complete Onboarding'
+                                'Sign Up'
                             )}
                         </Button>
                     </form>
@@ -222,7 +206,7 @@ export default function SignupPage() {
                         </div>
                     </div>
                 </div>
-            </motion.div>
-        </div>
+            </motion.div >
+        </div >
     );
 }

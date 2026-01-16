@@ -130,7 +130,7 @@ export default function SigninPage() {
             </AnimatePresence>
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Email Pipeline</Label>
+              <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Email</Label>
               <Input
                 type="email"
                 placeholder="name@nexus.com"
@@ -143,7 +143,7 @@ export default function SigninPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between ml-1">
-                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Access Key</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Password</Label>
                 <Link href="#" className="text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-widest transition-colors">Recover Account</Link>
               </div>
               <Input
@@ -167,7 +167,7 @@ export default function SigninPage() {
                   <span>Synchronizing...</span>
                 </div>
               ) : (
-                'Initialize Session'
+                'Sign In'
               )}
             </Button>
           </form>
