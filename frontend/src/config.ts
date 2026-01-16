@@ -11,10 +11,9 @@ export const config = {
     // 2. Railway backend fallback (for deployed environments)
     // 3. Localhost fallback (standard for local development)
     apiUrl: cleanUrl(
-        process.env.NEXT_PUBLIC_API_URL ||
-        (process.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === 'production'
             ? 'https://physical-ai-humanoid-robotics-course-oak1.onrender.com'
-            : 'http://localhost:8000')
+            : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
     ),
 
     // Better Auth specific config if needed
