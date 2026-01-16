@@ -13,7 +13,7 @@ export const config = {
     apiUrl: cleanUrl(
         process.env.NEXT_PUBLIC_API_URL ||
         (process.env.NODE_ENV === 'production'
-            ? 'https://todo-full-stack-web-application-hackathon-02-production.up.railway.app'
+            ? 'https://physical-ai-humanoid-robotics-course-oak1.onrender.com'
             : 'http://localhost:8000')
     ),
 
