@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
+@router.get("", include_in_schema=False)
+async def chat_root_get():
+    return {"message": "Chat API is running. Use POST to send messages."}
+
 @router.post("", response_model=ChatResponse)
 async def send_chat_message(
     request: ChatRequest,
