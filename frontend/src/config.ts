@@ -12,7 +12,7 @@ export const config = {
     // 3. Localhost fallback (standard for local development)
     apiUrl: cleanUrl(
         process.env.NODE_ENV === 'production'
-            ? 'https://physical-ai-humanoid-robotics-course-oak1.onrender.com'
+            ? 'https://todo-full-stack-web-application-hackathon-02-production.up.railway.app'
             : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
     ),
 
