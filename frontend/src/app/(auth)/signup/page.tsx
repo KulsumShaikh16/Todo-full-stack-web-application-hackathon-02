@@ -178,7 +178,7 @@ export default function SignupPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Verify Key</Label>
+                                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Confirm Password</Label>
                                 <Input
                                     type="password"
                                     placeholder="••••••••"
