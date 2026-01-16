@@ -7,13 +7,14 @@ const cleanUrl = (url: string | undefined): string => {
 
 export const config = {
     // API URL preference:
-    // 1. Environment variable (standard for Vercel/Production)
-    // 2. Railway backend fallback (for deployed environments)
+    // 1. Environment variable (standard for Vercel/Production) - Highest priority
+    // 2. Production check to use Railway backend
     // 3. Localhost fallback (standard for local development)
     apiUrl: cleanUrl(
-        process.env.NODE_ENV === 'production'
+        process.env.NEXT_PUBLIC_API_URL ||
+        (process.env.NODE_ENV === 'production'
             ? 'https://todo-full-stack-web-application-hackathon-02-production.up.railway.app'
-            : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
+            : 'http://localhost:8000')
     ),
 
     // Better Auth specific config if needed
