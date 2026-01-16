@@ -32,6 +32,17 @@ if settings.cors_origins:
 # Ensure we don't have duplicates
 cors_origins_list = list(set(cors_origins_list))
 
+# Add the Vercel frontend domain to allow requests from the deployed frontend
+vercel_domain = "https://frontend-six-sage-67.vercel.app"
+if vercel_domain not in cors_origins_list:
+    cors_origins_list.append(vercel_domain)
+
+# Also add common development origins if not already present
+dev_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+for origin in dev_origins:
+    if origin not in cors_origins_list:
+        cors_origins_list.append(origin)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan handler for startup/shutdown events."""
