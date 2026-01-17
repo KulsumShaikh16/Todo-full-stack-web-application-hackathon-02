@@ -33,7 +33,7 @@ if settings.cors_origins:
 cors_origins_list = list(set(cors_origins_list))
 
 # Add the Vercel frontend domain to allow requests from the deployed frontend
-vercel_domain = "https://frontend-six-sage-67.vercel.app"
+vercel_domain = "https://todo-full-stack-web-application-pha.vercel.app"
 if vercel_domain not in cors_origins_list:
     cors_origins_list.append(vercel_domain)
 
