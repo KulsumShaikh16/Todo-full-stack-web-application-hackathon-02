@@ -1,8 +1,37 @@
+# Vercel
 .vercel
+
+# Environment files
+.env
 .env*.local
-.vscode/
 backend/.env
+frontend/.env
 frontend/.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Node
 node_modules/
+
+# Python
 __pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
+
+# Logs
+*.log
+
+# Docker (local volumes)
+docker-data/
+
+# Kubernetes secrets (never commit real secrets!)
+k8s/base/secrets-*.yaml
+!k8s/base/secrets.yaml
+
+# Helm
+helm/todo-app/charts/
+helm/todo-app/values-local.yaml
+*.tgz

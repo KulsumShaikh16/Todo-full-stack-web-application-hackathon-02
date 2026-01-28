@@ -143,10 +143,22 @@ Examples of foundational tasks (adjust based on your project):
 ---
 
 [Add more user story phases as needed, following the same pattern]
-
----
-
-## Phase N: Polish & Cross-Cutting Concerns
+140: 
+141: ---
+142: 
+143: ## Phase 6: Infrastructure & DevOps (Phase IV)
+144: 
+145: **Purpose**: Containerization and Kubernetes orchestration
+146: 
+147: - [ ] TXXX [P] Create Dockerfiles with multi-stage builds
+148: - [ ] TXXX [P] Create Kubernetes manifests (Deployment, Service, Ingress)
+149: - [ ] TXXX Create Helm chart for templated deployment
+150: - [ ] TXXX Setup Horizontal Pod Autoscaler (HPA)
+151: - [ ] TXXX [P] Configure Liveness/Readiness probes
+152: 
+153: ---
+154: 
+155: ## Phase N: Polish & Cross-Cutting Concerns
 
 **Purpose**: Improvements that affect multiple user stories
 

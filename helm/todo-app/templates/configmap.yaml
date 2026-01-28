@@ -1,0 +1,20 @@
+# ==============================================================================
+# ConfigMap Template
+# ==============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "todo-app.fullname" . }}-config
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+data:
+  # Backend configuration
+  BACKEND_HOST: {{ .Values.backend.env.BACKEND_HOST | quote }}
+  BACKEND_PORT: {{ .Values.backend.env.BACKEND_PORT | quote }}
+  GEMINI_MODEL: {{ .Values.backend.env.GEMINI_MODEL | quote }}
+  CORS_ORIGINS: "http://localhost:3000,http://{{ .Values.frontend.name }}-service:3000,http://{{ .Values.ingress.host }}"
+  
+  # Frontend configuration
+  NEXT_PUBLIC_API_URL: "http://{{ .Values.backend.name }}:{{ .Values.backend.service.port }}"
+  NODE_ENV: {{ .Values.frontend.env.NODE_ENV | default "production" | quote }}

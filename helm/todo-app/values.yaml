@@ -1,0 +1,150 @@
+# ==============================================================================
+# Default Values for Todo App Helm Chart
+# ==============================================================================
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# ==============================================================================
+
+# Global settings
+global:
+  namespace: todo-app
+  environment: development
+
+# =============================================================================
+# Backend Configuration
+# =============================================================================
+backend:
+  name: todo-backend
+  
+  # Image settings
+  image:
+    repository: todo-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  # Replica count
+  replicaCount: 2
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8000
+  
+  # Container port
+  containerPort: 8000
+  
+  # Resource limits
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  
+  # Health checks
+  healthCheck:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  # Environment variables (non-sensitive)
+  env:
+    BACKEND_HOST: "0.0.0.0"
+    BACKEND_PORT: "8000"
+    GEMINI_MODEL: "gemini-flash-latest"
+  
+  # Autoscaling
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+# =============================================================================
+# Frontend Configuration
+# =============================================================================
+frontend:
+  name: todo-frontend
+  
+  # Image settings
+  image:
+    repository: todo-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  # Replica count
+  replicaCount: 2
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 3000
+  
+  # Container port
+  containerPort: 3000
+  
+  # Resource limits
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+  
+  # Health checks
+  healthCheck:
+    enabled: true
+    path: /
+    initialDelaySeconds: 15
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  # Environment variables (non-sensitive)
+  env:
+    NODE_ENV: "production"
+
+# =============================================================================
+# Ingress Configuration
+# =============================================================================
+ingress:
+  enabled: true
+  className: nginx
+  host: todo-app.local
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+  tls:
+    enabled: false
+    secretName: todo-app-tls
+
+# =============================================================================
+# Secrets Configuration
+# =============================================================================
+# NOTE: These are placeholder values. Override in your environment-specific values file
+# or use external secrets management in production.
+secrets:
+  databaseUrl: "postgresql://user:password@host/db?sslmode=require"
+  betterAuthSecret: "your-auth-secret-here"
+  geminiApiKey: "your-gemini-api-key-here"
+
+# =============================================================================
+# Security Context
+# =============================================================================
+securityContext:
+  runAsNonRoot: true
+  backend:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  frontend:
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001

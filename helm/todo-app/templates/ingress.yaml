@@ -1,0 +1,74 @@
+# ==============================================================================
+# Ingress Template
+# ==============================================================================
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "todo-app.fullname" . }}-ingress
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "todo-app.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          # Backend API routes
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.backend.name }}-service
+                port:
+                  number: {{ .Values.backend.service.port }}
+          
+          # Health check route
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .Values.backend.name }}-service
+                port:
+                  number: {{ .Values.backend.service.port }}
+          
+          # Auth routes
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.backend.name }}-service
+                port:
+                  number: {{ .Values.backend.service.port }}
+          
+          # Chat routes
+          - path: /chat
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.backend.name }}-service
+                port:
+                  number: {{ .Values.backend.service.port }}
+          
+          # Frontend (catch-all)
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.frontend.name }}-service
+                port:
+                  number: {{ .Values.frontend.service.port }}
+{{- end }}

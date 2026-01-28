@@ -31,25 +31,22 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-### Phase Compliance
-
-- **Phase I (Console)**: In-memory storage, CLI interface, Python only
-- **Phase II (Web App)**:
-  - Backend: Python REST API (FastAPI)
-  - Database: Neon Serverless PostgreSQL
-  - ORM/Data Layer: SQLModel
-  - Frontend: Next.js (React, TypeScript)
-  - Authentication: Better Auth (signup/signin only)
-- **Phase III+ (Advanced)**: Cloud infrastructure, agents, AI (not applicable to Phase II)
-
-### Principle Validation
-
-- **Spec-Driven Development**: No implementation without spec → plan → tasks
-- **Phase Isolation**: No future phase technologies (no AI, agents, advanced cloud)
-- **Test-First**: Tests MUST exist before implementation (80% coverage minimum)
-- **Security by Design**: User data isolation, JWT auth, environment variables for secrets
-- **Technology Matrix Compliance**: All technologies align with current phase
-- **API-First Design**: REST APIs defined before implementation, JSON format
+34: ### Phase Compliance
+35: 
+36: - **Phase I (Console)**: In-memory storage, CLI interface, Python only
+37: - **Phase II (Web App)**: API, Next.js, Postgres, Better Auth (signup/signin)
+38: - **Phase III (Chatbot)**: Gemini AI, MCP Tools, Chat UI
+39: - **Phase IV (Infrastructure)**: Docker, Kubernetes, Helm, Minikube
+40: - **Phase V+ (Advanced)**: Advanced cloud/enterprise (not applicable to current)
+41: 
+42: ### Principle Validation
+43: 
+44: - **Spec-Driven Development**: No implementation without spec → plan → tasks
+45: - **Phase Isolation**: No future phase technologies
+46: - **Test-First**: Tests exist before implementation (80% coverage); K8s manifest linting
+47: - **Security by Design**: User data isolation, K8s Secrets, Non-root containers
+48: - **Technology Matrix Compliance**: All technologies align with current phase
+49: - **API-First Design**: REST APIs defined before implementation, JSON format
 
 ### Gate Outcome
 

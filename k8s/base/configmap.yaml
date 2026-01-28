@@ -1,0 +1,22 @@
+# ==============================================================================
+# Kubernetes ConfigMap for Todo Application
+# ==============================================================================
+# Contains non-sensitive configuration that can be shared
+# ==============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-config
+  namespace: todo-app
+  labels:
+    app.kubernetes.io/name: todo-app
+    app.kubernetes.io/component: config
+data:
+  # Backend configuration
+  BACKEND_HOST: "0.0.0.0"
+  BACKEND_PORT: "8000"
+  GEMINI_MODEL: "gemini-flash-latest"
+  CORS_ORIGINS: "http://localhost:3000,http://todo-frontend-service:3000"
+  
+  # Frontend configuration
+  NEXT_PUBLIC_API_URL: "http://todo-backend-service:8000"

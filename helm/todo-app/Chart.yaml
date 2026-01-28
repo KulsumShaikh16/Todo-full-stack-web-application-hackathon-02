@@ -1,0 +1,17 @@
+# ==============================================================================
+# Helm Chart for Todo Full-Stack Application
+# ==============================================================================
+apiVersion: v2
+name: todo-app
+description: A Helm chart for Todo Full-Stack Web Application with FastAPI backend and Next.js frontend
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - todo
+  - fastapi
+  - nextjs
+  - kubernetes
+maintainers:
+  - name: Developer
+    email: developer@example.com

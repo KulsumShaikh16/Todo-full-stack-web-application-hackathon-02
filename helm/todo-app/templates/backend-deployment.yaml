@@ -1,0 +1,88 @@
+# ==============================================================================
+# Backend Deployment Template
+# ==============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "todo-app.backendLabels" . | nindent 4 }}
+spec:
+  {{- if not .Values.backend.autoscaling.enabled }}
+  replicas: {{ .Values.backend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "todo-app.backendSelectorLabels" . | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        {{- include "todo-app.backendSelectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.securityContext.runAsNonRoot }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: {{ .Values.securityContext.backend.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.backend.runAsGroup }}
+        fsGroup: {{ .Values.securityContext.backend.fsGroup }}
+      {{- end }}
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.containerPort }}
+              protocol: TCP
+          
+          envFrom:
+            - configMapRef:
+                name: {{ include "todo-app.fullname" . }}-config
+          
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "todo-app.fullname" . }}-secrets
+                  key: DATABASE_URL
+            - name: BETTER_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "todo-app.fullname" . }}-secrets
+                  key: BETTER_AUTH_SECRET
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "todo-app.fullname" . }}-secrets
+                  key: GEMINI_API_KEY
+          
+          {{- if .Values.backend.healthCheck.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.backend.healthCheck.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.backend.healthCheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.healthCheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.backend.healthCheck.timeoutSeconds }}
+            failureThreshold: {{ .Values.backend.healthCheck.failureThreshold }}
+          
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.backend.healthCheck.path }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          {{- end }}
+          
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+      
+      terminationGracePeriodSeconds: 30

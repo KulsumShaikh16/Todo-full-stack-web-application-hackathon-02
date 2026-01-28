@@ -27,7 +27,7 @@ tests:
 
 ## Prompt
 
-Create Phase II specification for "Evolution of Todo" project.
+
 
 PHASE II OBJECTIVE:
 Transform the Phase I console-based todo app into a secure, multi-user full-stack web application.

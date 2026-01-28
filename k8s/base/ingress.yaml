@@ -1,0 +1,70 @@
+# ==============================================================================
+# Kubernetes Ingress for Todo Application
+# ==============================================================================
+# Routes external traffic to frontend and backend services
+# Requires NGINX Ingress Controller to be installed
+# ==============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-ingress
+  namespace: todo-app
+  labels:
+    app.kubernetes.io/name: todo-app
+    app.kubernetes.io/component: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: todo-app.local
+      http:
+        paths:
+          # Backend API routes
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-backend-service
+                port:
+                  number: 8000
+          
+          # Health check route
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: todo-backend-service
+                port:
+                  number: 8000
+          
+          # Auth routes
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-backend-service
+                port:
+                  number: 8000
+          
+          # Chat routes
+          - path: /chat
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-backend-service
+                port:
+                  number: 8000
+          
+          # Frontend (catch-all, must be last)
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-frontend-service
+                port:
+                  number: 3000

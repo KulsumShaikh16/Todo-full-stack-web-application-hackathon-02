@@ -1,0 +1,20 @@
+# ==============================================================================
+# Kubernetes Service for Todo Backend
+# ==============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-backend-service
+  namespace: todo-app
+  labels:
+    app.kubernetes.io/name: todo-backend
+    app.kubernetes.io/component: backend
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: todo-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+      protocol: TCP

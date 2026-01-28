@@ -1,0 +1,46 @@
+# ==============================================================================
+# Staging Environment Values
+# ==============================================================================
+# Use with: helm install todo-app ./helm/todo-app -f values-staging.yaml
+# ==============================================================================
+
+global:
+  namespace: todo-app-staging
+  environment: staging
+
+backend:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+
+frontend:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+ingress:
+  enabled: true
+  host: staging.todo-app.example.com
+  tls:
+    enabled: true
+    secretName: todo-app-staging-tls
+
+# Staging secrets (use external secrets in real deployment)
+secrets:
+  databaseUrl: "postgresql://user:password@staging-host/db?sslmode=require"
+  betterAuthSecret: "staging-secret-key"
+  geminiApiKey: "your-staging-api-key"
