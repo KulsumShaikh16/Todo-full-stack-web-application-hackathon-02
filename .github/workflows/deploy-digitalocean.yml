@@ -71,8 +71,8 @@ jobs:
             --set backend.image.tag=${{ github.sha }} \
             --set frontend.image.repository=registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-frontend \
             --set frontend.image.tag=${{ github.sha }} \
-            --set secrets.databaseUrl=${{ secrets.DATABASE_URL }} \
-            --set secrets.betterAuthSecret=${{ secrets.BETTER_AUTH_SECRET }} \
-            --set secrets.geminiApiKey=${{ secrets.GEMINI_API_KEY }} \
+            --set secrets.databaseUrl="${{ secrets.DATABASE_URL }}" \
+            --set secrets.betterAuthSecret="${{ secrets.BETTER_AUTH_SECRET }}" \
+            --set secrets.geminiApiKey="${{ secrets.GEMINI_API_KEY }}" \
             -f helm/todo-app/values-digitalocean.yaml \
             --atomic --timeout 15m
