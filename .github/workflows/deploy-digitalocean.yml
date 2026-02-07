@@ -64,6 +64,18 @@ jobs:
       - name: Save DigitalOcean Kubeconfig
         run: doctl kubernetes cluster kubeconfig save ${{ env.DOKS_CLUSTER }}
 
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Create Registry Secret
+        run: |
+          kubectl create namespace todo-app || true
+          doctl registry docker-config --read-only > docker-config.json
+          kubectl create secret generic docr-secret \
+            --from-file=.dockerconfigjson=docker-config.json \
+            --type=kubernetes.io/dockerconfigjson \
+            -n todo-app --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy with Helm
         run: |
           helm upgrade --install todo-app ./helm/todo-app \
@@ -75,4 +87,5 @@ jobs:
             --set secrets.betterAuthSecret="${{ secrets.BETTER_AUTH_SECRET }}" \
             --set secrets.geminiApiKey="${{ secrets.GEMINI_API_KEY }}" \
             -f helm/todo-app/values-digitalocean.yaml \
+            --namespace todo-app \
             --atomic --timeout 15m

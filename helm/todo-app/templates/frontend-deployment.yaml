@@ -35,6 +35,10 @@ spec:
         runAsGroup: {{ .Values.securityContext.frontend.runAsGroup }}
         fsGroup: {{ .Values.securityContext.frontend.fsGroup }}
       {{- end }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: frontend
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"

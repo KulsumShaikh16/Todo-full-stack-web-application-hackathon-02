@@ -5,6 +5,8 @@
 global:
   environment: production
   namespace: todo-app
+  imagePullSecrets:
+    - name: docr-secret
 
 backend:
   replicaCount: 2
@@ -52,9 +54,7 @@ ingress:
 # Dapr Specific Configurations (via annotations in templates)
 # The templates already have dapr.io/enabled: "true"
 
-# Resource Registry Secret for DOCR (if needed)
-# imagePullSecrets:
-#   - name: docr-secret
+
 
 dapr:
   cloudComponents:

@@ -150,3 +150,9 @@ securityContext:
     runAsUser: 1001
     runAsGroup: 1001
     fsGroup: 1001
+# =============================================================================
+# Dapr Configuration
+# =============================================================================
+dapr:
+  cloudComponents:
+    enabled: false
