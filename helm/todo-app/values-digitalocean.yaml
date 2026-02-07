@@ -1,0 +1,56 @@
+# ==============================================================================
+# Digital Ocean Production Values for Todo App
+# ==============================================================================
+
+global:
+  environment: production
+  namespace: todo-app
+
+backend:
+  replicaCount: 2
+  image:
+    repository: registry.digitalocean.com/todo-registry-kulsumshaikh16/todo-backend
+    tag: latest
+    pullPolicy: Always
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  env:
+    DAPR_PUBSUB_NAME: "pubsub-kafka"
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: registry.digitalocean.com/todo-registry-kulsumshaikh16/todo-frontend
+    tag: latest
+    pullPolicy: Always
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+ingress:
+  enabled: true
+  className: nginx
+  host: todo.your-domain.com # Update with your domain
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  tls:
+    enabled: true
+    secretName: todo-app-tls
+
+# Dapr Specific Configurations (via annotations in templates)
+# The templates already have dapr.io/enabled: "true"
+
+# Resource Registry Secret for DOCR (if needed)
+# imagePullSecrets:
+#   - name: docr-secret

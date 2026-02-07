@@ -1,8 +1,21 @@
 """Database models for the Todo application using SQLModel."""
 
 from datetime import datetime
-from typing import Optional
-from sqlmodel import Field, Relationship, SQLModel
+from typing import Optional, List
+from enum import Enum
+from sqlmodel import Field, Relationship, SQLModel, Column
+import sqlalchemy as sa
+
+
+# ============================================
+# Phase V: Priority Enum
+# ============================================
+
+class Priority(str, Enum):
+    """Task priority levels."""
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
 
 
 class User(SQLModel, table=True):
@@ -73,6 +86,88 @@ class Todo(SQLModel, table=True):
         default_factory=datetime.utcnow,
         description="Last update timestamp"
     )
+    
+    # ============================================
+    # Phase V: Advanced Features
+    # ============================================
+    priority: Priority = Field(
+        default=Priority.MEDIUM,
+        sa_column=Column(sa.Enum(Priority), nullable=False, index=True),
+        description="Task priority level"
+    )
+    due_date: Optional[datetime] = Field(
+        default=None,
+        index=True,
+        description="Task due date (optional)"
+    )
+    recurrence_pattern: Optional[str] = Field(
+        default=None,
+        max_length=50,
+        description="Recurrence pattern: daily, weekly, monthly, or custom cron"
+    )
+    reminder_time: Optional[datetime] = Field(
+        default=None,
+        description="Reminder time (must be before due_date)"
+    )
+    
+    @property
+    def is_overdue(self) -> bool:
+        """Check if task is overdue (past due date and not completed)."""
+        if not self.due_date or self.completed:
+            return False
+        return datetime.utcnow() > self.due_date
+
+
+# ============================================
+# Phase V: Tag and TaskTag Models
+# ============================================
+
+class Tag(SQLModel, table=True):
+    """Tag model for categorizing tasks.
+
+    Table: tags
+    """
+    __tablename__ = "tags"
+
+    id: int = Field(
+        default=None,
+        primary_key=True,
+        description="Unique tag identifier"
+    )
+    name: str = Field(
+        unique=True,
+        index=True,
+        min_length=1,
+        max_length=50,
+        description="Tag name (unique, 1-50 characters)"
+    )
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        description="Creation timestamp"
+    )
+
+
+class TaskTag(SQLModel, table=True):
+    """Join table for Todo-Tag many-to-many relationship.
+
+    Table: task_tags
+    """
+    __tablename__ = "task_tags"
+
+    task_id: int = Field(
+        foreign_key="todos.id",
+        primary_key=True,
+        description="Task ID"
+    )
+    tag_id: int = Field(
+        foreign_key="tags.id",
+        primary_key=True,
+        description="Tag ID"
+    )
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        description="Association creation timestamp"
+    )
 
 
 # Pydantic models for API requests/responses
@@ -80,6 +175,12 @@ class TodoCreate(SQLModel):
     """Model for creating a new todo."""
     title: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = None
+    # Phase V: Advanced features fields
+    priority: Optional[Priority] = Priority.MEDIUM
+    tags: Optional[List[str]] = Field(default=[], max_length=10)
+    due_date: Optional[datetime] = None
+    recurrence_pattern: Optional[str] = Field(default=None, max_length=50)
+    reminder_time: Optional[datetime] = None
 
 
 class TodoUpdate(SQLModel):
@@ -87,6 +188,12 @@ class TodoUpdate(SQLModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = None
     completed: Optional[bool] = None
+    # Phase V: Advanced features fields
+    priority: Optional[Priority] = None
+    tags: Optional[List[str]] = None
+    due_date: Optional[datetime] = None
+    recurrence_pattern: Optional[str] = None
+    reminder_time: Optional[datetime] = None
 
 
 class TodoResponse(SQLModel):
@@ -98,6 +205,13 @@ class TodoResponse(SQLModel):
     completed: bool
     created_at: datetime
     updated_at: datetime
+    # Phase V: Advanced features fields
+    priority: Priority = Priority.MEDIUM
+    tags: List[str] = []
+    due_date: Optional[datetime] = None
+    recurrence_pattern: Optional[str] = None
+    reminder_time: Optional[datetime] = None
+    is_overdue: bool = False
 
 
 class TodoListResponse(SQLModel):
@@ -265,3 +379,27 @@ class ConversationListResponse(SQLModel):
     """Model for list of conversations."""
     conversations: list[ConversationListItem]
     total: int
+
+
+# ============================================
+# Phase V: Tag API Models
+# ============================================
+
+class TagResponse(SQLModel):
+    """Model for tag response."""
+    id: int
+    name: str
+    created_at: datetime
+    usage_count: int = 0  # Number of tasks using this tag
+
+
+class TagListResponse(SQLModel):
+    """Model for list of tags."""
+    tags: list[TagResponse]
+    total: int
+
+
+class AddTagsRequest(SQLModel):
+    """Model for adding tags to a task."""
+    tags: List[str] = Field(..., min_length=1, max_length=10, description="List of tag names (1-10 tags)")
+

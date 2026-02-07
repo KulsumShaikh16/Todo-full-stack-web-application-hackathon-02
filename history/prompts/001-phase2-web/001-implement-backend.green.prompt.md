@@ -1,35 +1,7 @@
 ---
-id: "001"
-title: "Implement Phase II backend-only"
-stage: "green"
-date: "2026-01-03"
-surface: "agent"
-model: "claude-opus-4-5-20251101"
-feature: "001-phase2-web"
-branch: "001-phase2-web"
-user: "human"
-command: "sp.implement"
-labels: ["backend","fastapi","sqlmodel","jwt"]
-links:
-  spec: "specs/001-phase2-web/spec.md"
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - "backend/pyproject.toml"
-  - "backend/db.py"
-  - "backend/models.py"
-  - "backend/main.py"
-  - "backend/dependencies/auth.py"
-  - "backend/routes/tasks.py"
-  - "backend/dependencies/__init__.py"
-  - "backend/routes/__init__.py"
-  - "backend/README.md"
-  - "backend/.env"
-  - "backend/.gitignore"
-  - ".env.example"
-  - "specs/001-phase2-web/tasks.md"
-tests: []
+name: 001-implement-backend-green
+model: claude-opus-4-5-20251101
+description: "Implement Phase II backend-only. Metadata: id=001, stage=green, feature=001-phase2-web."
 ---
 
 ## Prompt

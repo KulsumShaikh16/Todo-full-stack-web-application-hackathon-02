@@ -1,28 +1,7 @@
 ---
-id: 001
-title: Phase II specification
-stage: spec
-date: 2025-01-02
-surface: agent
+name: 001-phase-ii-spec
 model: claude-sonnet-4-5-20250929
-feature: 001-phase2-web
-branch: 001-phase2-web
-user: User
-command: /sp.specify
-labels: ["phase-ii", "specification", "user-stories", "requirements"]
-links:
-  spec: specs/001-phase2-web/spec.md
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - specs/001-phase2-web/spec.md
-  - specs/001-phase2-web/checklists/requirements.md
-  - .specify/memory/constitution.md
-  - .specify/templates/plan-template.md
-  - .specify/templates/spec-template.md
-tests:
-  - None
+description: "Phase II specification prompt. Metadata: id=001, stage=spec, feature=001-phase2-web, command=/sp.specify."
 ---
 
 ## Prompt

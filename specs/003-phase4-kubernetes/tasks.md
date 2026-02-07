@@ -61,7 +61,7 @@
 ### [T-008] Load Docker images into Minikube
 - **Description**: Transfer built images from local Docker to Minikube's internal registry.
 - **Preconditions**: [T-006], [T-007] complete, Minikube running.
-- **Expected Outcome**: `minikube image ls` shows both images.
+- **Expected Outcome**: `minikube image ls` shows both images. (Completed)
 - **Artifacts**: Minikube Internal Image cache.
 - **Reference**: Plan Section 2.
 
@@ -121,7 +121,7 @@
 ### [T-016] Deploy Backend Using Helm
 - **Description**: Run helm install/upgrade for the backend component.
 - **Preconditions**: Helm chart and values ready, secrets injected.
-- **Expected Outcome**: Helm release `todo-app` status shows `deployed`.
+- **Expected Outcome**: Helm release `todo-app` status shows `deployed`. (Completed)
 - **Artifacts**: Kubernetes release.
 - **Reference**: Plan Section 4.
 

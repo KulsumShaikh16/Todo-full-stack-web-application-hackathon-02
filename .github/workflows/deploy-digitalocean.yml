@@ -1,0 +1,75 @@
+name: Deploy to Digital Ocean
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  # Replace with your Digital Ocean Container Registry and Cluster details
+  DOCR_REGISTRY: "todo-registry-kulsumshaikh16"
+  DOKS_CLUSTER: "todo-cluster"
+  REGION: "nyc1"
+
+jobs:
+  build_and_push:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install DigitalOcean CLI
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Build Backend Image
+        run: |
+          docker build -t registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-backend:latest ./backend
+          docker build -t registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-backend:${{ github.sha }} ./backend
+
+      - name: Build Frontend Image
+        run: |
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            -t registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-frontend:latest ./frontend
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            -t registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-frontend:${{ github.sha }} ./frontend
+
+      - name: Push Images to DOCR
+        run: |
+          docker push registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-backend:latest
+          docker push registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-backend:${{ github.sha }}
+          docker push registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-frontend:latest
+          docker push registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-frontend:${{ github.sha }}
+
+  deploy:
+    name: Deploy to DOKS
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install DigitalOcean CLI
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Save DigitalOcean Kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ env.DOKS_CLUSTER }}
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install todo-app ./helm/todo-app \
+            --set backend.image.repository=registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-backend \
+            --set backend.image.tag=${{ github.sha }} \
+            --set frontend.image.repository=registry.digitalocean.com/${{ env.DOCR_REGISTRY }}/todo-frontend \
+            --set frontend.image.tag=${{ github.sha }} \
+            -f helm/todo-app/values-digitalocean.yaml \
+            --atomic --timeout 15m

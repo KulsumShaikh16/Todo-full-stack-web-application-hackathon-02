@@ -1,28 +1,7 @@
 ---
-id: "002"
-title: "Add unit tests for backend"
-stage: "green"
-date: "2026-01-03"
-surface: "agent"
-model: "claude-opus-4-5-20251101"
-feature: "001-phase2-web"
-branch: "001-phase2-web"
-user: "human"
-command: "Add unit tests for the backend"
-labels: ["testing","pytest","backend","unit-tests"]
-links:
-  spec: null
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - "backend/tests/conftest.py"
-  - "backend/tests/test_auth.py"
-  - "backend/tests/test_models.py"
-  - "backend/tests/test_tasks_api.py"
-  - "backend/tests/__init__.py"
-  - "specs/001-phase2-web/tasks.md"
-tests: []
+name: 002-add-unit-tests-green
+model: claude-opus-4-5-20251101
+description: "Add unit tests for backend. Metadata: id=002, stage=green, feature=001-phase2-web."
 ---
 
 ## Prompt

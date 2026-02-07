@@ -23,7 +23,7 @@ backend:
     pullPolicy: IfNotPresent
   
   # Replica count
-  replicaCount: 2
+  replicaCount: 1
   
   # Service configuration
   service:
@@ -46,7 +46,7 @@ backend:
   healthCheck:
     enabled: true
     path: /health
-    initialDelaySeconds: 10
+    initialDelaySeconds: 60
     periodSeconds: 30
     timeoutSeconds: 5
     failureThreshold: 3
@@ -56,10 +56,12 @@ backend:
     BACKEND_HOST: "0.0.0.0"
     BACKEND_PORT: "8000"
     GEMINI_MODEL: "gemini-flash-latest"
+    DAPR_PUBSUB_NAME: "pubsub-console"
+    DAPR_HTTP_PORT: "3500"
   
   # Autoscaling
   autoscaling:
-    enabled: true
+    enabled: false
     minReplicas: 2
     maxReplicas: 10
     targetCPUUtilizationPercentage: 70
@@ -78,7 +80,7 @@ frontend:
     pullPolicy: IfNotPresent
   
   # Replica count
-  replicaCount: 2
+  replicaCount: 1
   
   # Service configuration
   service:
@@ -101,7 +103,7 @@ frontend:
   healthCheck:
     enabled: true
     path: /
-    initialDelaySeconds: 15
+    initialDelaySeconds: 60
     periodSeconds: 30
     timeoutSeconds: 5
     failureThreshold: 3

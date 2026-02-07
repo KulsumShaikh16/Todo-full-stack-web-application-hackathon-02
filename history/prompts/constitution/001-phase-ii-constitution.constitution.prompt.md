@@ -1,26 +1,7 @@
 ---
-id: 001
-title: Phase II Constitution Amendment
-stage: constitution
-date: 2025-01-02
-surface: agent
+name: 001-phase-ii-constitution
 model: claude-sonnet-4-5-20250929
-feature: none
-branch: master
-user: User
-command: /sp.constitution
-labels: ["constitution", "phase-ii", "tech-stack"]
-links:
-  spec: null
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - .specify/memory/constitution.md
-  - .specify/templates/plan-template.md
-  - .specify/templates/spec-template.md
-tests:
-  - None
+description: "Phase II Constitution Amendment. Metadata: id=001, stage=constitution, feature=none."
 ---
 
 ## Prompt

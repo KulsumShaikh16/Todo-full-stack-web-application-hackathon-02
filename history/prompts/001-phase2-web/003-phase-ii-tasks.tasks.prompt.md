@@ -1,24 +1,7 @@
 ---
-id: 003
-title: Phase II tasks breakdown
-stage: tasks
-date: 2025-01-02
-surface: agent
+name: 003-phase-ii-tasks
 model: claude-opus-4-5-20251101
-feature: 001-phase2-web
-branch: 001-phase2-web
-user: User
-command: /sp.tasks
-labels: ["phase-ii", "tasks", "implementation"]
-links:
-  spec: specs/001-phase2-web/spec.md
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - specs/001-phase2-web/tasks.md
-tests:
-  - None
+description: "Phase II tasks breakdown. Metadata: id=003, stage=tasks, feature=001-phase2-web."
 ---
 
 ## Prompt

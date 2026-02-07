@@ -1,212 +1,83 @@
-<!--
-SYNC IMPACT REPORT
-==================
-Version Change: 2.1.0 → 2.2.0
-Modified Principles:
-  - II. Phase Isolation (Updated with detailed Phase IV rules and constraints)
-  - V. Technology Matrix Compliance (Updated with detailed Phase IV technologies)
-Added Sections:
-  - Phase IV: Local Kubernetes Deployment (Detailed requirements and constraints)
-Removed Sections: None
-Templates Requiring Updates:
-  ✅ .specify/templates/plan-template.md (Updated Phase IV scope)
-  ✅ .specify/templates/spec-template.md (Aligned with Phase IV infrastructure)
-  ✅ .specify/templates/tasks-template.md (Updated for K8s/Docker tasks)
-Follow-up TODOs: None
--->
+# Project Constitution: AI Powered Todo Chatbot (v5.0)
+## Hackathon Phase 5 - Part A & Part B
 
-# Evolution of Todo Constitution
+This document serves as the supreme governing law for Phase 5 of the "Evolution of Todo" project. It outlines the architectural principles, development workflow, and technical constraints required to transform the application into an event-driven distributed system running locally on Kubernetes.
 
-## Core Principles
+---
 
-### I. Spec-Driven Development (NON-NEGOTIABLE)
-All features MUST follow the strict workflow: Constitution → Specification → Plan → Tasks → Implementation.
+## 🎯 Primary Objective
+Transform the Todo application from a CRUD-based application into an **Event-Driven Distributed System** running locally on **Kubernetes (Minikube)**, leveraging **Dapr** and **Kafka**.
 
-**Rules**:
-- No code generation without approved specification
-- No implementation without approved tasks
-- All decisions must be documented (spec/plan/tasks)
-- Amendments to specs require explicit user approval
-- Skipping steps is prohibited
+---
 
-**Rationale**:
-Ensures alignment, prevents scope creep, maintains traceability, and reduces rework.
+## 🚀 Goals
+1.  **Event-Driven Evolution**: Refactor the existing chatbot architecture into loosely coupled microservices.
+2.  **Advanced Feature Integration**: Implement sophisticated task management features (Priority, Tags, Recurrence, Reminders).
+3.  **Dapr Abstraction Layer**: Use Dapr building blocks for all cross-cutting concerns: Pub/Sub, State, Jobs, Secrets, and Service Invocation.
+4.  **Local Kubernetes Excellence**: Achieve full operational status on Minikube before proceeding to cloud deployment.
 
-### II. Phase Isolation (NON-NEGOTIABLE)
-Each phase has strict technology boundaries. Features MUST NOT introduce technologies from future phases.
+---
 
-**Rules**:
-- Phase I: In-memory console application only
-- Phase II: Full-stack web application (Python REST API, Neon PostgreSQL, Next.js)
-- Phase III: AI Chatbot (Natural Language Processing, MCP, Gemini)
-- Phase IV: Local Kubernetes Deployment (Docker, Kubernetes, Helm, Docker AI, kubectl-ai, Kagent)
-- Phase V+: Advanced cloud/enterprise features (Future)
-- Cross-phase technology leakage is prohibited
-- Frontend and backend MUST be containerized in Phase IV
-- Containers MUST be deployed via Kubernetes manifests or Helm charts in Phase IV
-- Helm charts are required for application deployment in Phase IV
-- kubectl-ai and/or Kagent may be used to generate or assist with Kubernetes resources in Phase IV
-- Docker AI (Gordon) may be used for Dockerfile generation and container operations in Phase IV
-- No new application features, UI changes, or backend/frontend logic changes in Phase IV
-- No cloud Kubernetes (EKS, GKE, AKS), CI/CD pipelines, or production-grade infrastructure in Phase IV
-- No paid cloud services or modification of Phase III functionality in Phase IV
+## ⚖️ Non-Negotiable Rules
 
-**Rationale**:
-Incremental delivery, technical debt control, milestone-focused development, and progressive complexity.
+### 1. Spec-Driven Development (SDD)
+- **Zero Manual Coding**: All production code MUST be generated through the SDD lifecycle:
+  `Constitution → Specify → Plan → Tasks → Implement`
+- **Tracing**: Every code change must be explicitly mapped back to a specific `sp.specify`, `sp.plan`, or `sp.tasks` command.
+- **Hierarchy Enforcement**: No agent or process may deviate from the `Constitution > Spec > Plan > Task > Implement` order.
 
-### III. Test-First (NON-NEGOTIABLE)
-TDD is mandatory for all production code. Tests MUST exist before implementation.
+### 2. Event-Driven Architecture (EDA) & Kafka
+- **Dapr-Only Messaging**: **Kafka must NEVER be accessed directly** from application logic. All publishing and subscribing MUST flow through Dapr Pub/Sub components.
+- **Topic Topology**: The following Kafka topics are mandatory:
+    - `task-events` (Mutations: created, updated, deleted)
+    - `reminders` (Scheduled notifications)
+    - `task-updates` (Real-time synchronization events)
+- **CRUD to Event Mapping**: Every single Task CRUD operation must emit a corresponding CloudEvent via Dapr.
 
-**Rules**:
-- Write tests → Get approval → Watch tests fail → Implement → Watch tests pass → Refactor
-- Red-Green-Refactor cycle strictly enforced
-- Minimum 80% code coverage required
-- Integration tests for all API contracts
-- End-to-end tests for critical user flows
-- **Infrastructure**: All manifests MUST pass linting/validation before deployment
+### 3. Microservices & Coupling
+- **Loose Coupling**: Services must remain independent. Direct service-to-service calls are prohibited; use **Dapr Service Invocation** or **Events**.
+- **Required Services**:
+    - **Chat API / Backend Service**: The primary entry point and task orchestration hub.
+    - **Recurring Task Service**: Background service that consumes completion events and creates next instances.
+    - **Notification Service**: Handles the delivery of reminders and real-time alerts.
+    - *Optional: Audit Service (log capture).*
 
-**Rationale**:
-Prevents regressions, documents behavior, enables refactoring, and ensures quality.
+### 4. Mandatory Advanced Features
+The following features are non-optional and must be fully implemented and integrated:
+- **Priorities**: High, Medium, and Low levels.
+- **Tags & Search**: Full tagging support with advanced filtering and search.
+- **Sorting**: Multi-attribute sorting on the dashboard.
+- **Due Dates & Reminders**: Temporal task management.
+- **Recurring Tasks**: Automated task regeneration logic.
 
-### IV. Security by Design
-Security requirements MUST be addressed at every phase, not as an afterthought.
+### 5. Dapr & Multi-Environment Constraints
+- **Required Building Blocks**:
+    - **Pub/Sub (Kafka)**: For inter-service communication.
+    - **State Management**: For reliable persistence of non-relational state.
+    - **Jobs API**: MUST be used for reminder scheduling (polling/cron in app code is banned).
+    - **Service Invocation**: For synchronous inter-service communication.
+    - **Secrets Store**: Secure retrieval of credentials from Kubernetes or Dapr.
+- **No Hardcoding**: Credentials, API keys, Kafka brokers, or Database connection strings must NEVER be hardcoded. Use Dapr Components or Kubernetes Secrets.
 
-**Rules**:
-- All user data MUST be isolated (user-scoped queries)
-- Authentication required for all protected resources
-- Secrets MUST be stored in environment variables or K8s Secrets (never hardcoded)
-- Input validation on all public APIs
-- SQL injection prevention (parameterized queries only)
-- JWT token verification on all authenticated requests
-- **Container Security**: Non-root users required for all Docker images
+### 6. Local Deployment (Minikube)
+- **Cluster**: Deploy to Minikube using managed manifests or Helm charts.
+- **Dapr Integration**: Dapr must be initialized in Kubernetes mode (`dapr init -k`).
+- **Kafka Strategy**: Kafka must be deployed using the **Strimzi Operator**.
+- **Annotations**: All Kubernetes deployments MUST include:
+    - `dapr.io/enabled: "true"`
+    - `dapr.io/app-id: <unique-id>`
+    - `dapr.io/app-port: <service-port>`
 
-**Rationale**:
-Protects user data, prevents unauthorized access, maintains trust, and ensures compliance.
+---
 
-### V. Technology Matrix Compliance
-All implementations MUST adhere to the phase-specific technology stack.
+## ✅ Acceptance Criteria (Definition of Done)
+1.  **Feature Completeness**: All "Advanced Features" are visible and functional in the UI and Chat interface.
+2.  **Event Integrity**: Every task mutation is verified to produce a valid CloudEvent in the Kafka cluster.
+3.  **Logic Automation**: Reminders fire correctly according to scheduled jobs, and recurring tasks are auto-created upon completion events.
+4.  **Cluster Stability**: The entire stack (Backend, Frontend, Dapr, Kafka, Database) runs stable on Minikube.
+5.  **Audit Trail**: Every significant prompt is recorded in a **Prompt History Record (PHR)**.
 
-**Rules**:
-- Phase I (Console App): Python, in-memory storage, CLI interface
-- Phase II (Web App):
-  - Backend: Python REST API (FastAPI)
-  - Database: Neon Serverless PostgreSQL
-  - ORM/Data Layer: SQLModel or equivalent
-  - Frontend: Next.js (React, TypeScript)
-  - Authentication: Better Auth (signup/signin only)
-- Phase III (AI Chatbot):
-  - AI Framework: Google Gemini API
-  - Agent Orchestration: LangChain/Custom
-  - Tool Protocol: MCP (Model Context Protocol)
-- Phase IV (Infrastructure):
-  - Containerization: Docker (Docker Desktop)
-  - Docker AI: Docker AI Agent (Gordon) for AI-assisted Docker operations
-  - Orchestration: Kubernetes (Minikube – local cluster only)
-  - Package Management: Helm Charts
-  - Kubernetes AI Ops:
-    - kubectl-ai (AI-assisted kubectl operations)
-    - Kagent (cluster analysis, optimization, diagnostics)
-  - Application: Phase III Todo Chatbot (Frontend + Backend already implemented)
-  - Deployment Scope: Local development only (Minikube), No cloud Kubernetes providers
+---
 
-**Prohibitions**:
-- No web technologies in Phase I
-- No AI/agent frameworks until Phase III
-- No orchestration/containerization until Phase IV
-- No real-time features until Phase V+
-
-**Rationale**:
-Clear boundaries prevent scope creep, enable focused delivery, and maintain architectural coherence.
-
-### VI. API-First Design
-All interfaces MUST be designed and documented before implementation.
-
-**Rules**:
-- API specifications MUST exist before backend implementation
-- Frontend MUST communicate via REST APIs only
-- No direct database access from frontend
-- All APIs MUST have JSON request/response format
-- Error responses MUST follow consistent format
-- OpenAPI documentation for all endpoints
-
-**Rationale**:
-Enables parallel development, clear contracts, testable interfaces, and maintainable code.
-
-## Phase-Based Development Strategy
-
-### Phase I: Console Application (Completed)
-**Scope**: Basic todo management in CLI
-**Technology**:
-- Python
-- In-memory storage (no persistence)
-- Command-line interface
-
-### Phase II: Full-Stack Web Application (Completed)
-**Scope**: Web-based todo application with persistence and authentication
-**Technology**:
-- Backend: Python REST API (FastAPI)
-- Database: Neon Serverless PostgreSQL
-- ORM/Data Layer: SQLModel
-- Frontend: Next.js (React, TypeScript)
-
-### Phase III: AI Chatbot (Completed)
-**Scope**: Natural language todo management via AI chatbot
-**Technology**:
-- AI Framework: Google Gemini API
-- Tool Protocol: MCP (Model Context Protocol)
-- Frontend: Custom React Chat UI
-
-### Phase IV: Local Kubernetes Deployment (Cloud-Native Todo Chatbot) (Current)
-**Scope**: Containerization, Orchestration, and Local Kubernetes Deployment for Todo Chatbot
-**Technology**:
-- **Containerization**: Docker (Docker Desktop)
-- **Docker AI**: Docker AI Agent (Gordon) for AI-assisted Docker operations
-- **Orchestration**: Kubernetes (Minikube – local cluster only)
-- **Package Management**: Helm Charts
-- **Kubernetes AI Ops**:
-  - kubectl-ai (AI-assisted kubectl operations)
-  - Kagent (cluster analysis, optimization, diagnostics)
-- **Application**: Phase III Todo Chatbot (Frontend + Backend already implemented)
-- **Deployment Scope**: Local development only (Minikube), No cloud Kubernetes providers
-**Features**:
-- Containerized frontend and backend components
-- Kubernetes manifests or Helm charts for deployment
-- Helm charts required for application deployment
-- kubectl-ai and/or Kagent may be used to generate or assist with Kubernetes resources
-- Docker AI (Gordon) may be used for Dockerfile generation and container operations
-
-**Constraints**:
-- No new application features
-- No UI changes
-- No backend or frontend logic changes
-- No cloud Kubernetes (EKS, GKE, AKS)
-- No CI/CD pipelines
-- No production-grade infrastructure
-- No paid cloud services
-- No modification of Phase III functionality
-
-### Phase V+: Advanced Features (Future)
-**Scope**: Enhanced capabilities with advanced infrastructure
-**Technology**:
-- Multi-region cloud deployment
-- Multi-modal AI (voice/image)
-- Real-time collaboration
-- Advanced analytics dashboard
-
-## Governance
-
-### Constitution Authority
-This constitution is the authoritative source for all technical decisions. It supersedes individual preferences and framework defaults.
-
-### Amendment Process
-1. Proposal: Document proposed changes with rationale
-2. Review: Assess impact on existing phases and features
-3. Approval: Requires explicit user confirmation
-4. Propagation: Update all dependent artifacts (templates, agents, docs)
-
-### Version Policy
-- **MAJOR**: Backward-incompatible governance changes
-- **MINOR**: New principle or phase scope added
-- **PATCH**: Clarifications, wording fixes
-
-**Version**: 2.2.0 | **Ratified**: 2025-01-02 | **Last Amended**: 2026-01-27
+**This constitution applies strictly to Phase 5 Part A and Part B.**
+**Failure to adhere to these principles constitutes a failure of the phase.**

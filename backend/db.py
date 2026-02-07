@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     jwt_expiration_minutes: int = 60  # Token expires after 60 minutes
     gemini_api_key: str
     gemini_model: str = "gemini-1.5-flash"
+    
+    # Dapr Configuration
+    dapr_pubsub_name: str = "pubsub-console"
+    dapr_http_port: int = 3500
 
 
 from pydantic import ValidationError

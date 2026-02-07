@@ -1,27 +1,7 @@
 ---
-id: 002
-title: Amending constitution for Phase IV Infrastructure
-stage: constitution
-date: 2026-01-27
-surface: agent
+name: 002-amend-constitution-phase-iv
 model: gemini-2.0-flash
-feature: infrastructure
-branch: phase4-kubernetes-deployment
-user: KulsumShaikh16
-command: /sp.constitution
-labels: [governance, phase4, kubernetes, docker, helm]
-links:
-  spec: specs/003-phase4-kubernetes/spec.md
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - .specify/memory/constitution.md
-  - .specify/templates/plan-template.md
-  - .specify/templates/spec-template.md
-  - .specify/templates/tasks-template.md
-tests:
-  - N/A (Infrastructure Governance)
+description: "Amending constitution for Phase IV Infrastructure. Metadata: id=002, stage=constitution, feature=infrastructure."
 ---
 
 

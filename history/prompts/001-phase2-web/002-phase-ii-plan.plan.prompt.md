@@ -1,24 +1,7 @@
 ---
-id: 002
-title: Phase II technical plan
-stage: plan
-date: 2025-01-02
-surface: agent
+name: 002-phase-ii-plan
 model: claude-opus-4-5-20251101
-feature: 001-phase2-web
-branch: 001-phase2-web
-user: User
-command: /sp.plan
-labels: ["phase-ii", "plan", "architecture", "implementation"]
-links:
-  spec: specs/001-phase2-web/spec.md
-  ticket: null
-  adr: null
-  pr: null
-files:
-  - specs/001-phase2-web/plan.md
-tests:
-  - None
+description: "Phase II technical plan prompt. Metadata: id=002, stage=plan, feature=001-phase2-web."
 ---
 
 ## Prompt

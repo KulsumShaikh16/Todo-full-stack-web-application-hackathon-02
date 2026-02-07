@@ -24,6 +24,11 @@ spec:
     metadata:
       labels:
         {{- include "todo-app.backendSelectorLabels" . | nindent 8 }}
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "todo-backend"
+        dapr.io/app-port: "8000"
+        dapr.io/log-level: "info"
     spec:
       {{- if .Values.securityContext.runAsNonRoot }}
       securityContext:

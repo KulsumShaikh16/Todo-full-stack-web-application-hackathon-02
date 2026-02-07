@@ -7,7 +7,7 @@ Use this if you're experiencing schema mismatch errors.
 
 from sqlmodel import text
 from db import engine, SQLModel
-from models import User, Todo
+from models import User, Todo, Tag, TaskTag, Conversation, Message
 
 def reset_schema():
     """Drop and recreate tables with the correct schema."""
