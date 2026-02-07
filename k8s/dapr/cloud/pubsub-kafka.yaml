@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: pubsub-kafka
-  namespace: default
+  namespace: todo-app
 spec:
   type: pubsub.kafka
   version: v1

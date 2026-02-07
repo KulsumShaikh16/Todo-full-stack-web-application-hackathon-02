@@ -39,13 +39,14 @@ frontend:
 ingress:
   enabled: true
   className: nginx
-  host: todo.your-domain.com # Update with your domain
+  host: "todo-app.local"  # Will be updated to <LOAD_BALANCER_IP>.nip.io after deployment
   annotations:
     kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # TLS disabled for initial setup - can be enabled later with cert-manager
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
   tls:
-    enabled: true
+    enabled: false
     secretName: todo-app-tls
 
 # Dapr Specific Configurations (via annotations in templates)
@@ -54,3 +55,7 @@ ingress:
 # Resource Registry Secret for DOCR (if needed)
 # imagePullSecrets:
 #   - name: docr-secret
+
+dapr:
+  cloudComponents:
+    enabled: true
