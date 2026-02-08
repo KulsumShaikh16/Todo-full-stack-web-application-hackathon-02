@@ -70,10 +70,10 @@ jobs:
       - name: Create Registry Secret
         run: |
           kubectl create namespace todo-app || true
-          doctl registry docker-config --read-only > docker-config.json
-          kubectl create secret generic docr-secret \
-            --from-file=.dockerconfigjson=docker-config.json \
-            --type=kubernetes.io/dockerconfigjson \
+          kubectl create secret docker-registry docr-secret \
+            --docker-server=registry.digitalocean.com \
+            --docker-username=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} \
+            --docker-password=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} \
             -n todo-app --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy with Helm
