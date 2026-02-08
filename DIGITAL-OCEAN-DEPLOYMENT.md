@@ -43,33 +43,15 @@ You MUST fix this to install the required infrastructure (Dapr & Kafka).
    doctl kubernetes cluster kubeconfig save todo-cluster
    ```
 
-### Step 2: Install Infrastructure (Requires kubectl access)
+### Step 2: Install Infrastructure (Completed)
+- ✅ Dapr initialized with `dapr init -k`
+- ✅ Strimzi Kafka installed and configured with KRaft mode (version 4.0.0)
+- ✅ NGINX Ingress Controller installed
+- ✅ Load Balancer IP obtained: `157.230.65.206`
+- ✅ Host configured: `157.230.65.206.nip.io`
+- ✅ GitHub secrets updated (`NEXT_PUBLIC_API_URL`)
 
-**You MUST run these commands once to prepare the cluster:**
-
-1. **Install Dapr:**
-   ```bash
-   # Install Dapr CLI if not installed (winget install Dapr.CLI)
-   dapr init -k
-   dapr status -k # Verify it's running
-   ```
-
-2. **Install Strimzi Kafka:**
-   ```bash
-   # Create kafka namespace
-   kubectl create namespace kafka
-   
-   # Install Operator
-   kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
-   
-   # Deploy Kafka Cluster (Wait for operator to be ready first)
-   kubectl apply -f k8s/kafka/kafka-cluster.yaml -n kafka
-   ```
-
-3. **Install NGINX Ingress Controller:**
-   ```bash
-   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/do/deploy.yaml
-   ```
+---
 
 ---
 
