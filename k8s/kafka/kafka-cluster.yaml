@@ -1,12 +1,35 @@
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: dual-role
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  replicas: 1
+  roles:
+    - controller
+    - broker
+  storage:
+    type: ephemeral
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: "0.5"
+    limits:
+      memory: 2Gi
+      cpu: "1"
+---
+apiVersion: kafka.strimzi.io/v1
 kind: Kafka
 metadata:
   name: my-cluster
   namespace: kafka
+  annotations:
+    strimzi.io/kraft: "enabled"
 spec:
   kafka:
-    version: 3.6.0
-    replicas: 1
+    version: 4.0.0
     listeners:
       - name: plain
         port: 9092
@@ -22,13 +45,6 @@ spec:
       transaction.state.log.min.isr: 1
       default.replication.factor: 1
       min.insync.replicas: 1
-      inter.broker.protocol.version: "3.6"
-    storage:
-      type: ephemeral
-  zookeeper:
-    replicas: 1
-    storage:
-      type: ephemeral
   entityOperator:
     topicOperator: {}
     userOperator: {}

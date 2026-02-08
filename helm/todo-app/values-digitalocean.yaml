@@ -41,7 +41,7 @@ frontend:
 ingress:
   enabled: true
   className: nginx
-  host: "todo-app.local"  # Will be updated to <LOAD_BALANCER_IP>.nip.io after deployment
+  host: "157.230.65.206.nip.io"
   annotations:
     kubernetes.io/ingress.class: nginx
     # TLS disabled for initial setup - can be enabled later with cert-manager
