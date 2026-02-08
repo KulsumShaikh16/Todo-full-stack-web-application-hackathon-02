@@ -103,3 +103,7 @@ async def get_optional_user(
         return decode_token(credentials.credentials)
     except HTTPException:
         return None
+
+async def get_current_user_from_token(token: str) -> TokenPayload:
+    """Helper to get user from a raw token string (e.g. from query params)."""
+    return decode_token(token)
