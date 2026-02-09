@@ -7,8 +7,8 @@ import { ChatContainer } from '@/components/chat/ChatContainer';
 import { ChatInput } from '@/components/chat/ChatInput';
 import { ConversationSidebar } from '@/components/chat/ConversationSidebar';
 import { LoadingPage } from '@/components/ui/loading';
-import { LogOut, LayoutDashboard, Menu, X, Sparkles } from 'lucide-react';
-import Link from 'next/link';
+import { Menu, X, Sparkles, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ChatPage() {
     const { user, logout } = useAuth();
@@ -114,22 +114,8 @@ export default function ChatPage() {
     if (initialLoading) return <LoadingPage />;
 
     return (
-        <div className="flex h-screen bg-[#020202] text-zinc-100 overflow-hidden font-sans selection:bg-blue-500/30">
-            {/* Background Decorative Elements */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-            </div>
-
-            {/* Mobile Sidebar Toggle */}
-            <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="lg:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105 active:scale-95 transition-all text-white border border-white/20"
-            >
-                {isSidebarOpen ? <X /> : <Menu />}
-            </button>
-
-            {/* Sidebar */}
+        <div className="flex h-full w-full bg-transparent overflow-hidden">
+            {/* Conversation Sidebar - Secondary */}
             <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative z-40 h-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]`}>
                 <ConversationSidebar
                     conversations={conversations}
@@ -140,71 +126,59 @@ export default function ChatPage() {
                 />
             </div>
 
-            {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col relative bg-transparent backdrop-blur-[2px]">
-                {/* Header */}
-                <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-black/40 backdrop-blur-xl sticky top-0 z-30">
-                    <div className="flex items-center gap-4">
-                        <Link href="/todos" className="group flex items-center gap-2 text-zinc-400 hover:text-white transition-all duration-300">
-                            <div className="p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                                <LayoutDashboard size={18} />
-                            </div>
-                            <span className="font-medium hidden sm:inline text-sm tracking-tight text-white/70 group-hover:text-white">Dashboard</span>
-                        </Link>
-                        <div className="h-4 w-[1px] bg-white/10 hidden sm:block"></div>
-                        <div className="flex items-center gap-2">
-                            <div className="relative">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                                <Sparkles size={16} className="text-blue-400 relative" />
-                            </div>
-                            <h1 className="text-sm font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent uppercase">
-                                FocusFlow AI
-                            </h1>
+            {/* Main Chat Content */}
+            <div className="flex-1 flex flex-col relative bg-transparent">
+                {/* Status Bar */}
+                <div className="h-14 border-b border-white/5 flex items-center justify-between px-8 bg-black/20 backdrop-blur-md sticky top-0 z-30">
+                    <div className="flex items-center gap-3">
+                        <div className="relative">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-25"></div>
+                            <Sparkles size={14} className="text-blue-400 relative" />
                         </div>
+                        <h2 className="text-[10px] font-black tracking-[0.3em] text-white uppercase">FocusFlow AI Terminal</h2>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex flex-col items-end">
-                            <span className="text-xs font-semibold text-zinc-200">{user?.name || 'User'}</span>
-                            <span className="text-[10px] text-zinc-500 font-medium">{user?.email}</span>
-                        </div>
-                        <div className="h-8 w-[1px] bg-white/10 ml-2"></div>
-                        <button
-                            onClick={() => logout()}
-                            className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all duration-300"
-                            title="Logout"
-                        >
-                            <LogOut size={18} />
-                        </button>
+                    <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Neural Link Latency: 24ms</span>
                     </div>
-                </header>
+                </div>
 
-                {/* Chat Content */}
-                <div className="flex-1 relative overflow-hidden flex flex-col">
+                {/* Error Pulse */}
+                <AnimatePresence>
                     {error && (
-                        <div className="mx-6 mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
-                                    <X size={14} />
-                                </div>
-                                <span className="font-medium">{error}</span>
-                            </div>
-                            <button
-                                onClick={() => setError(null)}
-                                className="text-red-400/50 hover:text-red-400 transition-colors"
-                            >
-                                <X size={16} />
-                            </button>
-                        </div>
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="mx-8 mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[10px] font-black uppercase tracking-widest flex items-center justify-between"
+                        >
+                            <span className="flex items-center gap-2 italic">
+                                <AlertCircle size={14} /> Error Detected: {error}
+                            </span>
+                            <button onClick={() => setError(null)}><X size={14} /></button>
+                        </motion.div>
                     )}
+                </AnimatePresence>
+
+                {/* Messages Hub */}
+                <div className="flex-1 overflow-hidden flex flex-col pt-4">
                     <ChatContainer messages={messages} isLoading={isLoading} />
                 </div>
 
-                {/* Input Area */}
-                <div className="relative z-10 px-4 pb-4">
+                {/* Input Matrix */}
+                <div className="px-8 pb-8 pt-4">
                     <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
                 </div>
             </div>
+
+            {/* Mobile Toggle */}
+            <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="lg:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-2xl shadow-blue-600/40 text-white border border-white/20"
+            >
+                {isSidebarOpen ? <X /> : <Menu />}
+            </button>
         </div>
     );
 }

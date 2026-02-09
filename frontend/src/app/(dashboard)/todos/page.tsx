@@ -15,21 +15,19 @@ import { LoadingPage } from '@/components/ui/loading';
 import { TodoItem } from '@/components/ui/todo-item';
 import { cn } from '@/lib/utils';
 import {
+  RefreshCw,
+  Trophy,
+  Activity,
   Plus,
-  LogOut,
   ClipboardList,
   AlertCircle,
   Sparkles,
-  LayoutDashboard,
-  Trophy,
   Zap,
   Flag,
   Hash,
   Clock,
-  Bell,
-  RefreshCw
+  Bell
 } from 'lucide-react';
-import Link from 'next/link';
 
 export default function TodosPage() {
   const { user, logout, isLoading: authLoading } = useAuth();
@@ -170,351 +168,206 @@ export default function TodosPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100 selection:bg-blue-500/30">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-black/60 backdrop-blur-2xl">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl blur opacity-40 group-hover:opacity-100 transition duration-500"></div>
-              <div className="relative bg-zinc-900 border border-white/10 p-2.5 rounded-xl shadow-2xl">
-                <LayoutDashboard size={20} className="text-blue-500" />
+    <div className="relative min-h-screen p-6 lg:p-12 max-w-7xl mx-auto">
+      {/* Background Decorative Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-[120px]" />
+      </div>
+
+      {/* Main Command Center Header */}
+      <header className="mb-20">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex-1 space-y-6"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-zinc-900/50 border border-white/5 backdrop-blur-md">
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+              <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Protocol Active</span>
+            </div>
+
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white leading-[0.85] select-none">
+              Control<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-600 to-indigo-600 drop-shadow-[0_0_30px_rgba(37,99,235,0.3)]">Center.</span>
+            </h1>
+
+            <p className="text-zinc-500 font-medium text-lg leading-relaxed max-w-md">
+              Optimizing your tactical objectives. Currently tracking <span className="text-white font-bold">{activeCount} pending missions</span>.
+            </p>
+          </motion.div>
+
+          {/* Efficiency Hub */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative group lg:w-[400px] w-full"
+          >
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-[3rem] opacity-20 blur-2xl group-hover:opacity-40 transition duration-1000" />
+            <div className="relative bg-[#0a0a0a] border border-white/10 rounded-[3rem] p-8 backdrop-blur-3xl overflow-hidden shadow-2xl">
+              <div className="flex items-center justify-between mb-10">
+                <div>
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] block mb-2 font-mono">Mission Success Rate</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-5xl font-black text-white tracking-tighter">{Math.round(progress)}%</span>
+                    <span className="text-blue-500 text-[10px] font-black uppercase tracking-widest">Optimal</span>
+                  </div>
+                </div>
+                <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center shadow-inner">
+                  <Zap size={24} className="text-blue-500" />
+                </div>
+              </div>
+
+              <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden mb-10 p-0.5 border border-white/5">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 rounded-full"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-zinc-900/50 p-4 rounded-2xl border border-white/5">
+                  <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] block mb-1">Missions</span>
+                  <span className="text-2xl font-black text-white">{todos.length}</span>
+                </div>
+                <div className="bg-zinc-900/50 p-4 rounded-2xl border border-white/5">
+                  <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em] block mb-1">Secured</span>
+                  <span className="text-2xl font-black text-emerald-500">{completedCount}</span>
+                </div>
               </div>
             </div>
-            <div>
-              <h1 className="text-lg font-bold tracking-tight text-white leading-none">FocusFlow</h1>
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-1">Professional Workspace</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-xs font-bold text-zinc-200">{user?.name || user?.email?.split('@')[0]}</span>
-              <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-tight">Standard Tier</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Link
-                href="/chat"
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl px-4 h-10 transition-all duration-300 shadow-lg shadow-blue-600/20 active:scale-95"
-              >
-                <Sparkles size={14} />
-                <span className="font-bold text-xs uppercase tracking-tight">AI Agent</span>
-              </Link>
-
-              <button
-                onClick={() => logout()}
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all active:scale-95"
-              >
-                <LogOut size={16} />
-              </button>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 pt-32 pb-24 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Left Column: Welcome & Stats */}
-          <div className="lg:col-span-12">
-            {/* Dashboard Header */}
+      {/* Task Creation Console */}
+      <section className="mb-24">
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-white/5 to-transparent rounded-[2.5rem] opacity-50 blur-sm" />
+          <div className="relative bg-zinc-900/40 border border-white/10 rounded-[2.5rem] p-8 lg:p-12 backdrop-blur-xl">
+            <form onSubmit={handleCreateTodo} className="space-y-8">
+              <div className="flex flex-col lg:flex-row items-end gap-6">
+                <div className="flex-1 w-full space-y-3">
+                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] font-mono ml-4">Initialize Objective</label>
+                  <input
+                    type="text"
+                    value={newTodoTitle}
+                    onChange={(e) => setNewTodoTitle(e.target.value)}
+                    placeholder="Enter mission parameters..."
+                    className="w-full bg-black/40 border border-white/10 rounded-3xl px-8 py-5 text-xl font-bold text-white placeholder-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isAdding || !newTodoTitle.trim()}
+                  className="w-full lg:w-auto h-[68px] px-12 bg-white text-black rounded-3xl font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-black group shadow-xl"
+                >
+                  <Plus className="inline-block mr-2 group-hover:rotate-90 transition-transform" size={20} strokeWidth={3} />
+                  Deploy
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-8 border-t border-white/5">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] font-mono ml-4">Priority</label>
+                  <PriorityPicker value={newTodoPriority} onChange={setNewTodoPriority} disabled={isAdding} />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] font-mono ml-4">Categorization</label>
+                  <TagInput value={newTodoTags} onChange={setNewTodoTags} disabled={isAdding} />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] font-mono ml-4">Timeline</label>
+                  <input
+                    type="datetime-local"
+                    value={newTodoDueDate}
+                    onChange={(e) => setNewTodoDueDate(e.target.value)}
+                    className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-3.5 text-xs text-zinc-400 focus:text-white transition-colors font-mono"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] font-mono ml-4">Intelligence</label>
+                  <div className="flex items-center gap-2 px-6 py-3.5 bg-blue-600/5 border border-blue-500/20 rounded-2xl text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] cursor-pointer hover:bg-blue-600/10 transition-colors">
+                    <Sparkles size={14} /> AI Optimized
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Operational Matrix (Missions) */}
+      <section>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+          <div className="flex items-center gap-4 bg-zinc-900/60 p-1.5 border border-white/10 rounded-[2rem] backdrop-blur-xl w-full md:w-auto">
+            {(['all', 'active', 'completed'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={cn(
+                  'flex-1 md:flex-none px-10 py-3.5 rounded-[1.5rem] text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500',
+                  filter === f
+                    ? 'bg-blue-600 text-white shadow-2xl shadow-blue-500/40 scale-105'
+                    : 'text-zinc-600 hover:text-zinc-300 hover:bg-white/5'
+                )}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-6 text-[10px] font-black text-zinc-700 uppercase tracking-[0.3em] font-mono">
+            <span className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500" /> {filteredTodos.length} Visible
+            </span>
+            <div className="w-px h-4 bg-zinc-800" />
+            <span>Operational Mode v2.5.0</span>
+          </div>
+        </div>
+
+        <div className="relative min-h-[400px]">
+          {error && (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative mb-20 group"
+              className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-3"
             >
-              {/* Floating Ambient Glow */}
-              <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none group-hover:bg-blue-600/30 transition-all duration-1000" />
-              <div className="absolute top-0 -right-20 w-64 h-64 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
-
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12 relative z-10">
-                <div className="flex-1 space-y-6">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900/80 border border-blue-500/20 backdrop-blur-md">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-                    <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Neural Link Established</span>
-                  </div>
-
-                  <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white leading-[0.9] select-none">
-                    Command <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-600 to-indigo-500 drop-shadow-[0_0_30px_rgba(37,99,235,0.3)]">Center.</span><br />
-                    <span className="italic text-zinc-800 group-hover:text-zinc-700 transition-colors duration-700">Forge the future.</span>
-                  </h2>
-
-                  <p className="text-zinc-500 font-medium text-lg md:text-xl max-w-xl leading-relaxed">
-                    Welcome back, <span className="text-white font-bold">{user?.name || 'Operator'}</span>.
-                    Your mission protocol is active with <span className="text-blue-500 font-black">{activeCount} pending objectives</span>.
-                  </p>
-                </div>
-
-                {/* Tactical Stats Card */}
-                <div className="relative group/stats">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-[2.5rem] opacity-20 blur-xl group-hover/stats:opacity-40 transition duration-1000" />
-                  <div className="relative bg-black/60 border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-3xl w-full lg:w-[380px] overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                      <Trophy size={120} />
-                    </div>
-
-                    <div className="flex items-end justify-between mb-8">
-                      <div>
-                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] block mb-2 font-mono">Mission Success Rate</span>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-5xl font-black text-white tracking-tighter">{Math.round(progress)}%</span>
-                          <span className="text-blue-500 font-bold text-xs uppercase tracking-widest">Optimal</span>
-                        </div>
-                      </div>
-                      <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center shadow-inner">
-                        <Zap size={24} className="text-blue-500" />
-                      </div>
-                    </div>
-
-                    <div className="relative w-full h-2 bg-zinc-900 rounded-full overflow-hidden mb-8 border border-white/5">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progress}%` }}
-                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-indigo-500 rounded-full transition-all duration-1000 ease-out"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-1 p-4 rounded-2xl bg-zinc-900/50 border border-white/5 hover:border-blue-500/20 transition-colors">
-                        <span className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.1em]">Objectives</span>
-                        <span className="text-2xl font-black text-white">{todos.length}</span>
-                      </div>
-                      <div className="flex flex-col gap-1 p-4 rounded-2xl bg-zinc-900/50 border border-white/5 hover:border-emerald-500/20 transition-colors">
-                        <span className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.1em]">Secured</span>
-                        <span className="text-2xl font-black text-emerald-500">{completedCount}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <AlertCircle size={14} /> {error}
             </motion.div>
+          )}
 
-            {/* AI Call to Action */}
-            <Link
-              href="/chat"
-              className="block mb-12 relative group overflow-hidden rounded-[2.5rem]"
+          {todos.length === 0 && !isLoading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-zinc-900/20 border border-dashed border-white/10 rounded-[4rem] py-32 text-center"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 group-hover:from-blue-600/30 group-hover:to-purple-600/30 transition-all duration-500"></div>
-              <div className="relative bg-zinc-900/60 backdrop-blur-xl border border-white/10 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 bg-blue-600 rounded-[2rem] flex items-center justify-center shadow-2xl shadow-blue-600/40 group-hover:scale-110 transition-transform duration-500">
-                    <Sparkles className="text-white" size={32} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white tracking-tight mb-1">Intelligent Task Orchestration</h3>
-                    <p className="text-zinc-400 font-medium">Use AI to generate, optimize, and organize your missions instantly.</p>
-                  </div>
-                </div>
-                <div className="bg-white text-black px-8 py-3 rounded-2xl font-bold text-sm uppercase tracking-tighter hover:bg-zinc-200 transition-colors shadow-2xl active:scale-95">
-                  Launch Assistant
-                </div>
+              <div className="mx-auto w-24 h-24 bg-zinc-900 rounded-[2.5rem] border border-white/5 flex items-center justify-center mb-8 text-zinc-700">
+                <ClipboardList size={40} />
               </div>
-            </Link>
-
-            {/* Task Controls - Enhanced Creation Form */}
-            <div className="mb-12">
-              <div className="relative group bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-6 backdrop-blur-xl transition-all hover:bg-zinc-900/60 focus-within:ring-2 focus-within:ring-blue-500/20 shadow-2xl">
-                <form onSubmit={handleCreateTodo} className="flex flex-col gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 relative">
-                      <input
-                        id="objective-input"
-                        name="title"
-                        placeholder="Initialize new objective..."
-                        value={newTodoTitle}
-                        onChange={(e) => setNewTodoTitle(e.target.value)}
-                        disabled={isAdding}
-                        autoComplete="off"
-                        className="w-full bg-transparent border-none text-xl md:text-2xl text-white font-bold placeholder-zinc-700 focus:outline-none py-2"
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      disabled={isAdding || !newTodoTitle.trim()}
-                      className="bg-blue-600 hover:bg-blue-500 text-white rounded-2xl px-8 h-12 transition-all disabled:opacity-50 active:scale-95 text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-600/20"
-                    >
-                      {isAdding ? 'Initializing...' : 'Add Mission'}
-                    </Button>
-                  </div>
-
-                  {/* Options Stack */}
-                  <div className="space-y-6 pt-6 border-t border-white/5">
-                    <div className="flex flex-col md:flex-row md:items-center gap-6">
-                      <div className="flex flex-col gap-2 min-w-[140px]">
-                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
-                          <Flag size={10} /> Priority
-                        </span>
-                        <PriorityPicker
-                          value={newTodoPriority}
-                          onChange={setNewTodoPriority}
-                          disabled={isAdding}
-                        />
-                      </div>
-
-                      <div className="hidden md:block w-px h-8 bg-zinc-800" />
-
-                      <div className="flex flex-col gap-2 flex-1">
-                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
-                          <Hash size={10} /> Tag Categorization
-                        </span>
-                        <TagInput
-                          value={newTodoTags}
-                          onChange={setNewTodoTags}
-                          disabled={isAdding}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
-                          <Clock size={10} /> Due Date
-                        </span>
-                        <input
-                          type="datetime-local"
-                          value={newTodoDueDate}
-                          onChange={(e) => setNewTodoDueDate(e.target.value)}
-                          className="bg-black/30 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
-                          <Bell size={10} /> Alert Pulse
-                        </span>
-                        <input
-                          type="datetime-local"
-                          value={newTodoReminder}
-                          onChange={(e) => setNewTodoReminder(e.target.value)}
-                          className="bg-black/30 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
-                          <RefreshCw size={10} /> Frequency
-                        </span>
-                        <select
-                          value={newTodoRecurrence}
-                          onChange={(e) => setNewTodoRecurrence(e.target.value)}
-                          className="bg-black/30 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all cursor-pointer font-mono appearance-none"
-                        >
-                          <option value="">None</option>
-                          <option value="daily">Daily</option>
-                          <option value="weekly">Weekly</option>
-                          <option value="monthly">Monthly</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-
-            {/* Tactical Control Bar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
-              <div className="flex bg-zinc-900/60 p-1 border border-white/10 rounded-2xl backdrop-blur-xl w-full md:w-auto">
-                {(['all', 'active', 'completed'] as const).map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={cn(
-                      'flex-1 md:flex-none px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300',
-                      filter === f
-                        ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] scale-105'
-                        : 'text-zinc-500 hover:text-white hover:bg-white/5'
-                    )}
-                  >
-                    {f}
-                  </button>
+              <h3 className="text-4xl font-black text-white mb-4 tracking-tighter">WORKSPACE CLEAR</h3>
+              <p className="text-zinc-500 text-lg max-w-sm mx-auto font-medium">All strategic objectives have been neutralized. Awaiting new mission parameters.</p>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              <AnimatePresence mode="popLayout">
+                {filteredTodos.map((todo) => (
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    onToggle={handleToggle}
+                    onDelete={handleDelete}
+                    onUpdate={handleUpdate}
+                  />
                 ))}
-              </div>
-
-              <div className="flex items-center gap-4 text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] font-mono">
-                <span className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                  {filteredTodos.length} Objectives Filtered
-                </span>
-                <div className="w-px h-4 bg-zinc-800" />
-                <span>Sync v2.5.1 Alpha</span>
-              </div>
+              </AnimatePresence>
             </div>
-          </div>
-
-          {/* Error Display */}
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="flex items-center gap-3 p-4 mb-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-xs uppercase tracking-widest"
-              >
-                <AlertCircle size={16} />
-                {error}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Mission Grid */}
-          <div className="relative min-h-[400px]">
-            {/* Visual Guideline */}
-            <div className="absolute left-[-40px] top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/20 via-zinc-800/50 to-transparent hidden xl:block" />
-
-            {todos.length === 0 && !isLoading ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-zinc-900/10 border border-white/5 rounded-[4rem] py-32 text-center backdrop-blur-3xl relative overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                <div className="relative z-10">
-                  <div className="mx-auto w-24 h-24 bg-zinc-900/80 rounded-[2.5rem] flex items-center justify-center mb-8 border border-white/10 shadow-2xl transition-transform group-hover:scale-110 duration-500">
-                    <Sparkles className="w-10 h-10 text-blue-500/40" />
-                  </div>
-                  <h3 className="text-4xl font-black text-white mb-4 tracking-tighter">SECURE WORKSPACE</h3>
-                  <p className="text-zinc-500 text-lg max-w-sm mx-auto font-medium leading-relaxed">
-                    All objectives have been successfully targeted and neutralized. Systems are holding at 100% efficiency.
-                  </p>
-                </div>
-              </motion.div>
-            ) : (
-              <div className="grid gap-6">
-                <AnimatePresence mode="popLayout">
-                  {filteredTodos.map((todo) => (
-                    <TodoItem
-                      key={todo.id}
-                      todo={todo}
-                      onToggle={handleToggle}
-                      onDelete={handleDelete}
-                      onUpdate={handleUpdate}
-                    />
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
-          </div>
+          )}
         </div>
-      </main>
-
-      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/60 backdrop-blur-2xl border-t border-white/5 py-3 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">System Online</span>
-            </div>
-            <div className="h-4 w-px bg-zinc-800"></div>
-            <div className="flex items-center gap-2">
-              <Trophy size={12} className="text-yellow-500/50" />
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{completedCount} Missions Secured</span>
-            </div>
-          </div>
-          <div className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] hidden sm:block font-mono">
-            FocusFlow v2.5.0 — Ultra Premium Build
-          </div>
-        </div>
-      </footer>
-    </div >
+      </section>
+    </div>
   );
 }
