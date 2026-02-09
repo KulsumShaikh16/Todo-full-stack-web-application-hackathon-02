@@ -217,45 +217,73 @@ export default function TodosPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column: Welcome & Stats */}
           <div className="lg:col-span-12">
+            {/* Dashboard Header */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12"
+              className="relative mb-20 group"
             >
-              <div className="flex-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-500 text-[10px] font-bold uppercase tracking-widest mb-4">
-                  <Zap size={10} /> Focus Mode Active
-                </div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-4 leading-[1.1]">
-                  Elevate <span className="text-blue-500">Focus.</span><br />
-                  Own the <span className="italic text-zinc-500">results.</span>
-                </h2>
-                <p className="text-zinc-400 font-medium text-lg md:text-xl">
-                  You have <span className="text-white font-bold">{activeCount} missions</span> remaining for today.
-                </p>
-              </div>
+              {/* Floating Ambient Glow */}
+              <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none group-hover:bg-blue-600/30 transition-all duration-1000" />
+              <div className="absolute top-0 -right-20 w-64 h-64 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
 
-              {/* Progress Card */}
-              <div className="bg-zinc-900/40 border border-white/5 rounded-[2rem] p-6 backdrop-blur-xl w-full lg:w-[320px] shrink-0">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-[0.2em]">Efficiency Rating</span>
-                  <span className="text-xl font-bold text-white font-mono">{Math.round(progress)}%</span>
-                </div>
-                <div className="relative w-full h-3 bg-zinc-800/50 rounded-full overflow-hidden mb-6">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progress}%` }}
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-1000"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-black/20 rounded-2xl p-3 border border-white/5">
-                    <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter block mb-1">Active</span>
-                    <span className="text-2xl font-black text-white">{activeCount}</span>
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12 relative z-10">
+                <div className="flex-1 space-y-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900/80 border border-blue-500/20 backdrop-blur-md">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                    <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Neural Link Established</span>
                   </div>
-                  <div className="bg-black/20 rounded-2xl p-3 border border-white/5">
-                    <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter block mb-1">Secured</span>
-                    <span className="text-2xl font-black text-emerald-500">{completedCount}</span>
+
+                  <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white leading-[0.9] select-none">
+                    Command <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-600 to-indigo-500 drop-shadow-[0_0_30px_rgba(37,99,235,0.3)]">Center.</span><br />
+                    <span className="italic text-zinc-800 group-hover:text-zinc-700 transition-colors duration-700">Forge the future.</span>
+                  </h2>
+
+                  <p className="text-zinc-500 font-medium text-lg md:text-xl max-w-xl leading-relaxed">
+                    Welcome back, <span className="text-white font-bold">{user?.name || 'Operator'}</span>.
+                    Your mission protocol is active with <span className="text-blue-500 font-black">{activeCount} pending objectives</span>.
+                  </p>
+                </div>
+
+                {/* Tactical Stats Card */}
+                <div className="relative group/stats">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-[2.5rem] opacity-20 blur-xl group-hover/stats:opacity-40 transition duration-1000" />
+                  <div className="relative bg-black/60 border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-3xl w-full lg:w-[380px] overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                      <Trophy size={120} />
+                    </div>
+
+                    <div className="flex items-end justify-between mb-8">
+                      <div>
+                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] block mb-2 font-mono">Mission Success Rate</span>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-5xl font-black text-white tracking-tighter">{Math.round(progress)}%</span>
+                          <span className="text-blue-500 font-bold text-xs uppercase tracking-widest">Optimal</span>
+                        </div>
+                      </div>
+                      <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center shadow-inner">
+                        <Zap size={24} className="text-blue-500" />
+                      </div>
+                    </div>
+
+                    <div className="relative w-full h-2 bg-zinc-900 rounded-full overflow-hidden mb-8 border border-white/5">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-indigo-500 rounded-full transition-all duration-1000 ease-out"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1 p-4 rounded-2xl bg-zinc-900/50 border border-white/5 hover:border-blue-500/20 transition-colors">
+                        <span className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.1em]">Objectives</span>
+                        <span className="text-2xl font-black text-white">{todos.length}</span>
+                      </div>
+                      <div className="flex flex-col gap-1 p-4 rounded-2xl bg-zinc-900/50 border border-white/5 hover:border-emerald-500/20 transition-colors">
+                        <span className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.1em]">Secured</span>
+                        <span className="text-2xl font-black text-emerald-500">{completedCount}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -383,21 +411,33 @@ export default function TodosPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-1 p-1 bg-zinc-900/60 border border-white/10 rounded-2xl backdrop-blur-xl">
-              {(['all', 'active', 'completed'] as const).map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={cn(
-                    'px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all',
-                    filter === f
-                      ? 'bg-white text-black shadow-xl scale-105'
-                      : 'text-zinc-500 hover:text-white hover:bg-white/5'
-                  )}
-                >
-                  {f}
-                </button>
-              ))}
+            {/* Tactical Control Bar */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+              <div className="flex bg-zinc-900/60 p-1 border border-white/10 rounded-2xl backdrop-blur-xl w-full md:w-auto">
+                {(['all', 'active', 'completed'] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={cn(
+                      'flex-1 md:flex-none px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300',
+                      filter === f
+                        ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] scale-105'
+                        : 'text-zinc-500 hover:text-white hover:bg-white/5'
+                    )}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] font-mono">
+                <span className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                  {filteredTodos.length} Objectives Filtered
+                </span>
+                <div className="w-px h-4 bg-zinc-800" />
+                <span>Sync v2.5.1 Alpha</span>
+              </div>
             </div>
           </div>
 
@@ -416,33 +456,30 @@ export default function TodosPage() {
             )}
           </AnimatePresence>
 
-          {/* Todo List Header */}
-          <div className="flex items-center justify-between mb-6 px-2">
-            <div className="flex items-center gap-4">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">Lifecycle Pipeline</span>
-              <div className="w-1 h-1 bg-zinc-800 rounded-full"></div>
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">{filteredTodos.length} Tasks</span>
-            </div>
-          </div>
+          {/* Mission Grid */}
+          <div className="relative min-h-[400px]">
+            {/* Visual Guideline */}
+            <div className="absolute left-[-40px] top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/20 via-zinc-800/50 to-transparent hidden xl:block" />
 
-          {/* Todo List */}
-          <div className="space-y-3 min-h-[300px]">
             {todos.length === 0 && !isLoading ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-zinc-900/20 border border-dashed border-white/10 rounded-[3rem] py-24 text-center backdrop-blur-3xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-zinc-900/10 border border-white/5 rounded-[4rem] py-32 text-center backdrop-blur-3xl relative overflow-hidden group"
               >
-                <div className="mx-auto w-24 h-24 bg-zinc-900/50 rounded-[2.5rem] flex items-center justify-center mb-8 border border-white/5 shadow-2xl">
-                  <ClipboardList className="w-12 h-12 text-zinc-700" />
+                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                <div className="relative z-10">
+                  <div className="mx-auto w-24 h-24 bg-zinc-900/80 rounded-[2.5rem] flex items-center justify-center mb-8 border border-white/10 shadow-2xl transition-transform group-hover:scale-110 duration-500">
+                    <Sparkles className="w-10 h-10 text-blue-500/40" />
+                  </div>
+                  <h3 className="text-4xl font-black text-white mb-4 tracking-tighter">SECURE WORKSPACE</h3>
+                  <p className="text-zinc-500 text-lg max-w-sm mx-auto font-medium leading-relaxed">
+                    All objectives have been successfully targeted and neutralized. Systems are holding at 100% efficiency.
+                  </p>
                 </div>
-                <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase whitespace-pre-wrap">Zero Workspace Objectives</h3>
-                <p className="text-zinc-500 text-lg max-w-sm mx-auto font-medium">
-                  Your current workload is optimized. Use the AI Assistant to generate new missions or take a structured break.
-                </p>
               </motion.div>
             ) : (
-              <div className="grid gap-4">
+              <div className="grid gap-6">
                 <AnimatePresence mode="popLayout">
                   {filteredTodos.map((todo) => (
                     <TodoItem
@@ -473,8 +510,8 @@ export default function TodosPage() {
               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{completedCount} Missions Secured</span>
             </div>
           </div>
-          <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest hidden sm:block">
-            FocusFlow v2.4.0 — Premium Build
+          <div className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] hidden sm:block font-mono">
+            FocusFlow v2.5.0 — Ultra Premium Build
           </div>
         </div>
       </footer>
