@@ -27,6 +27,8 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
+
+          
           # Backend API routes
           - path: /api
             pathType: Prefix
@@ -35,7 +37,7 @@ spec:
                 name: {{ .Values.backend.name }}-service
                 port:
                   number: {{ .Values.backend.service.port }}
-          
+
           # Health check route
           - path: /health
             pathType: Exact
@@ -45,23 +47,9 @@ spec:
                 port:
                   number: {{ .Values.backend.service.port }}
           
-          # Auth routes
-          - path: /auth
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.backend.name }}-service
-                port:
-                  number: {{ .Values.backend.service.port }}
+
           
-          # Chat routes
-          - path: /chat
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.backend.name }}-service
-                port:
-                  number: {{ .Values.backend.service.port }}
+
           
           # Frontend (catch-all)
           - path: /

@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Todo } from '@/types';
+import { Todo, Priority } from '@/types';
 import { formatDateTime, cn } from '@/lib/utils';
-import { Check, Trash2, Edit2, X, Clock, Hash, Calendar, ArrowRight } from 'lucide-react';
+import { Check, Trash2, Edit2, X, Clock, Hash, Calendar, ArrowRight, Flag, Bell, RefreshCw } from 'lucide-react';
 
 interface TodoItemProps {
   todo: Todo;
@@ -12,6 +12,12 @@ interface TodoItemProps {
   onDelete: (id: number) => Promise<void>;
   onUpdate: (id: number, title: string) => Promise<void>;
 }
+
+const priorityColors = {
+  [Priority.HIGH]: 'text-red-500 bg-red-500/10 border-red-500/20',
+  [Priority.MEDIUM]: 'text-amber-500 bg-amber-500/10 border-amber-500/20',
+  [Priority.LOW]: 'text-blue-500 bg-blue-500/10 border-blue-500/20',
+};
 
 export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -124,12 +130,18 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
                 </div>
               </motion.div>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  {/* Task ID Badge */}
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-500/5 border border-blue-500/10 text-blue-400 text-[9px] font-bold uppercase tracking-widest">
-                    ID #{String(todo.id).padStart(3, '0')}
-                  </span>
+                  {/* Priority Badge */}
+                  {todo.priority && (
+                    <span className={cn(
+                      "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-bold uppercase tracking-widest",
+                      priorityColors[todo.priority] || priorityColors[Priority.MEDIUM]
+                    )}>
+                      <Flag size={8} />
+                      {todo.priority}
+                    </span>
+                  )}
 
                   <h3
                     className={cn(
@@ -140,6 +152,18 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
                     {todo.title}
                   </h3>
                 </div>
+
+                {/* Tags List */}
+                {todo.tags && todo.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {todo.tags.map((tag, idx) => (
+                      <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800/50 border border-white/5 text-zinc-400 text-[10px] font-medium">
+                        <Hash size={8} />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </AnimatePresence>
@@ -150,6 +174,33 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
                 <Calendar size={10} className="text-zinc-600" />
                 {formatDateTime(todo.created_at)}
               </div>
+
+              {/* Due Date Display */}
+              {todo.due_date && (
+                <div className={cn(
+                  "flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider",
+                  todo.is_overdue && !todo.completed ? "text-red-500" : "text-zinc-500"
+                )}>
+                  <Clock size={10} />
+                  {formatDateTime(todo.due_date)}
+                </div>
+              )}
+
+              {/* Reminder Display */}
+              {todo.reminder_time && (
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
+                  <Bell size={10} className="text-zinc-600" />
+                  {formatDateTime(todo.reminder_time)}
+                </div>
+              )}
+
+              {/* Recurrence Display */}
+              {todo.recurrence_pattern && (
+                <div className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
+                  <RefreshCw size={10} className="text-zinc-600" />
+                  {todo.recurrence_pattern}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">

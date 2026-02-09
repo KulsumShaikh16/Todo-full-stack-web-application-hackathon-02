@@ -1,4 +1,11 @@
 // Todo types matching backend API
+// Enum matching backend
+export enum Priority {
+  HIGH = 'HIGH',
+  MEDIUM = 'MEDIUM',
+  LOW = 'LOW',
+}
+
 export interface Todo {
   id: number;
   user_id: string;
@@ -7,6 +14,12 @@ export interface Todo {
   completed: boolean;
   created_at: string;
   updated_at: string;
+  priority: Priority;
+  tags: string[];
+  due_date: string | null;
+  recurrence_pattern: string | null;
+  reminder_time: string | null;
+  is_overdue: boolean;
 }
 
 export interface TodoListResponse {
@@ -17,12 +30,22 @@ export interface TodoListResponse {
 export interface TodoCreate {
   title: string;
   description?: string | null;
+  priority?: Priority;
+  tags?: string[];
+  due_date?: string | null;
+  recurrence_pattern?: string | null;
+  reminder_time?: string | null;
 }
 
 export interface TodoUpdate {
   title?: string;
   description?: string | null;
   completed?: boolean;
+  priority?: Priority;
+  tags?: string[];
+  due_date?: string | null;
+  recurrence_pattern?: string | null;
+  reminder_time?: string | null;
 }
 
 // Auth types (JWT-based)

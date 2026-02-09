@@ -97,6 +97,47 @@ See `scripts/deploy-manual.ps1` (create if needed) or use steps above.
 
 ---
 
+## ✅ Deployment Verification (Latest Status)
+
+### Current Deployment Status - February 9, 2026
+**✅ APPLICATION IS SUCCESSFULLY DEPLOYED AND RUNNING!**
+
+#### Services Status:
+- **Backend**: 2 pods running (2/2 containers each - app + Dapr sidecar)
+- **Frontend**: 2 pods running (2/2 containers each - app + Dapr sidecar)
+- **Load Balancer IP**: `157.230.65.206`
+- **Application URL**: http://157.230.65.206.nip.io
+
+#### Access Points:
+- **Frontend**: ✅ http://157.230.65.206.nip.io (WORKING)
+- **API Endpoints**: ✅ http://157.230.65.206.nip.io/api/health (WORKING - Rewrites Configured)
+
+#### Infrastructure:
+- ✅ Dapr system running
+- ✅ Kafka cluster running (Strimzi)  
+#### Known Issues:
+- **None.** The previous API routing issues have been resolved.
+   - **Ingress Logic**: The Ingress now correctly passes `/api/*` traffic to the backend, which handles the routing (e.g., `/api/tasks`).
+   - **Frontend Config**: Ensure `NEXT_PUBLIC_API_URL` is set to the **base URL** (e.g., `http://157.230.65.206.nip.io`), NOT `.../api`, because the frontend code appends `/api` automatically.
+
+---
+
+### Important: Frontend Environment Variable Update
+
+If you are seeing 404 errors on the frontend (e.g., "Not Found" on Signup), it is likely because `NEXT_PUBLIC_API_URL` includes a trailing `/api`.
+
+**Correct Configuration:**
+```bash
+# CORRECT (Base URL only):
+gh secret set NEXT_PUBLIC_API_URL --body "http://157.230.65.206.nip.io"
+
+# INCORRECT (Do NOT do this):
+# gh secret set NEXT_PUBLIC_API_URL --body "http://157.230.65.206.nip.io/api"
+```
+After updating the secret, you must **re-run the deployment workflow** for the changes to take effect in the frontend build.
+
+---
+
 ## 🔍 Troubleshooting
 
 ### Check Pod Status
@@ -106,7 +147,18 @@ kubectl get pods -n kafka
 kubectl get pods -n dapr-system
 ```
 
-### Check Logs
+### Check Logs (Updated with correct label)
 ```bash
-kubectl logs -n todo-app -l app=todo-backend --tail=50
+# Backend logs
+kubectl logs -n todo-app -l app.kubernetes.io/name=todo-backend -c backend --tail=50
+
+# Frontend logs
+kubectl logs -n todo-app -l app.kubernetes.io/name=todo-frontend -c frontend --tail=50
+```
+
+### Check Services and Ingress
+```bash
+kubectl get svc -n todo-app
+kubectl get ingress -n todo-app
+kubectl describe ingress todo-app-ingress -n todo-app
 ```

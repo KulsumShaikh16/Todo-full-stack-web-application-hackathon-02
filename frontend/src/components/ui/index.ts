@@ -4,3 +4,5 @@ export { Label } from './label';
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card';
 export { LoadingSpinner, LoadingPage } from './loading';
 export { TodoItem } from './todo-item';
+export { PriorityPicker } from './priority-picker';
+export { TagInput } from './tag-input';

@@ -4,10 +4,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/lib/auth-context';
 import { api } from '@/lib/api';
-import { Todo, TodoCreate, TodoUpdate } from '@/types';
+import { Todo, TodoCreate, TodoUpdate, Priority } from '@/types';
 import {
   Button,
   Input,
+  PriorityPicker,
+  TagInput,
 } from '@/components/ui';
 import { LoadingPage } from '@/components/ui/loading';
 import { TodoItem } from '@/components/ui/todo-item';
@@ -49,21 +51,40 @@ export default function TodosPage() {
     }
   }, [authLoading, loadTodos]);
 
+  const [newTodoPriority, setNewTodoPriority] = useState<Priority>(Priority.MEDIUM);
+  const [newTodoTags, setNewTodoTags] = useState<string[]>([]);
+  const [newTodoDueDate, setNewTodoDueDate] = useState<string>('');
+  const [newTodoReminder, setNewTodoReminder] = useState<string>('');
+  const [newTodoRecurrence, setNewTodoRecurrence] = useState<string>('');
+
   const handleCreateTodo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTodoTitle.trim()) return;
 
     setError('');
     setIsAdding(true);
-    console.log('Attempting to create task:', newTodoTitle.trim());
 
     try {
-      const todo: TodoCreate = { title: newTodoTitle.trim() };
+      const todo: TodoCreate = {
+        title: newTodoTitle.trim(),
+        priority: newTodoPriority,
+        tags: newTodoTags,
+        due_date: newTodoDueDate ? new Date(newTodoDueDate).toISOString() : null,
+        reminder_time: newTodoReminder ? new Date(newTodoReminder).toISOString() : null,
+        recurrence_pattern: newTodoRecurrence || null,
+      };
+
       const created = await api.createTask(todo);
-      console.log('Task created successfully:', created);
       setTodos([created, ...todos]);
       setTotal(total + 1);
+
+      // Reset form
       setNewTodoTitle('');
+      setNewTodoPriority(Priority.MEDIUM);
+      setNewTodoTags([]);
+      setNewTodoDueDate('');
+      setNewTodoReminder('');
+      setNewTodoRecurrence('');
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to create todo';
       console.error('Task creation failed:', msg);
@@ -77,6 +98,7 @@ export default function TodosPage() {
     const todo = todos.find((t) => t.id === id);
     if (!todo) return;
 
+    // Optimistic update
     setTodos(todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
 
     try {
@@ -131,6 +153,7 @@ export default function TodosPage() {
   if (authLoading || isLoading) {
     return <LoadingPage />;
   }
+
 
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-100 selection:bg-blue-500/30">
@@ -246,121 +269,175 @@ export default function TodosPage() {
               </div>
             </Link>
 
-            {/* Task Controls */}
-            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
-              <div className="flex-1 relative group">
-                <form onSubmit={handleCreateTodo} className="relative">
-                  <div className="absolute inset-0 bg-blue-600/10 rounded-2xl blur-xl opacity-0 group-focus-within:opacity-100 transition-all duration-500 pointer-events-none"></div>
-                  <input
-                    id="objective-input"
-                    name="title"
-                    placeholder="Initialize new objective..."
-                    value={newTodoTitle}
-                    onChange={(e) => setNewTodoTitle(e.target.value)}
-                    disabled={isAdding}
-                    autoComplete="off"
-                    autoFocus
-                    className="w-full h-14 bg-zinc-900/60 border border-white/10 rounded-2xl pl-14 pr-32 transition-all focus:border-blue-500/50 focus:bg-zinc-900 text-white font-semibold placeholder-zinc-600 outline-none group-hover:border-white/20 relative z-10"
-                  />
-                  <div className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none z-20">
-                    <Plus size={20} strokeWidth={3} />
+            {/* Task Controls - Enhanced Creation Form */}
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="relative group bg-zinc-900/40 border border-white/5 rounded-3xl p-4 backdrop-blur-xl transition-all focus-within:bg-zinc-900/60 focus-within:border-blue-500/20 focus-within:shadow-xl focus-within:shadow-blue-500/5">
+                <form onSubmit={handleCreateTodo} className="flex flex-col gap-4 relative">
+                  <div className="relative">
+                    <input
+                      id="objective-input"
+                      name="title"
+                      placeholder="Initialize new objective..."
+                      value={newTodoTitle}
+                      onChange={(e) => setNewTodoTitle(e.target.value)}
+                      disabled={isAdding}
+                      autoComplete="off"
+                      className="w-full h-12 bg-transparent border-none text-lg text-white font-semibold placeholder-zinc-600 focus:outline-none pl-2"
+                    />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                      <Button
+                        type="submit"
+                        disabled={isAdding || !newTodoTitle.trim()}
+                        className="bg-blue-600 hover:bg-blue-500 text-white rounded-xl px-4 py-2 transition-all disabled:opacity-50 active:scale-95 text-xs font-bold uppercase tracking-widest"
+                      >
+                        {isAdding ? 'Saving...' : 'Add'}
+                      </Button>
+                    </div>
                   </div>
-                  <Button
-                    type="submit"
-                    disabled={isAdding || !newTodoTitle.trim()}
-                    className="absolute right-2 top-2 bottom-2 bg-blue-600 hover:bg-blue-500 text-white border-none rounded-xl px-4 transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2 min-w-[100px] justify-center z-20"
-                  >
-                    {isAdding ? (
-                      <>
-                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span className="text-[10px] font-bold uppercase tracking-tight">Initializing</span>
-                      </>
-                    ) : (
-                      <span className="text-xs font-bold uppercase tracking-widest">Add</span>
-                    )}
-                  </Button>
+
+                  {/* Enhanced Options Row */}
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-4 pt-4 border-t border-white/5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Priority</span>
+                      <PriorityPicker
+                        value={newTodoPriority}
+                        onChange={setNewTodoPriority}
+                        disabled={isAdding}
+                      />
+                    </div>
+
+                    <div className="h-6 w-px bg-zinc-800 hidden sm:block"></div>
+
+                    <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Tags</span>
+                      <div className="flex-1">
+                        <TagInput
+                          value={newTodoTags}
+                          onChange={setNewTodoTags}
+                          disabled={isAdding}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="h-6 w-px bg-zinc-800 hidden lg:block"></div>
+
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Due</span>
+                        <input
+                          type="datetime-local"
+                          value={newTodoDueDate}
+                          onChange={(e) => setNewTodoDueDate(e.target.value)}
+                          className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Alert</span>
+                        <input
+                          type="datetime-local"
+                          value={newTodoReminder}
+                          onChange={(e) => setNewTodoReminder(e.target.value)}
+                          className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Repeat</span>
+                        <select
+                          value={newTodoRecurrence}
+                          onChange={(e) => setNewTodoRecurrence(e.target.value)}
+                          className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all appearance-none cursor-pointer min-w-[100px]"
+                        >
+                          <option value="">None</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </form>
               </div>
-
-              <div className="flex items-center gap-1 p-1 bg-zinc-900/60 border border-white/10 rounded-2xl backdrop-blur-xl">
-                {(['all', 'active', 'completed'] as const).map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={cn(
-                      'px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all',
-                      filter === f
-                        ? 'bg-white text-black shadow-xl scale-105'
-                        : 'text-zinc-500 hover:text-white hover:bg-white/5'
-                    )}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
             </div>
 
-            {/* Error Display */}
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-3 p-4 mb-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-xs uppercase tracking-widest"
+            <div className="flex items-center gap-1 p-1 bg-zinc-900/60 border border-white/10 rounded-2xl backdrop-blur-xl">
+              {(['all', 'active', 'completed'] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={cn(
+                    'px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all',
+                    filter === f
+                      ? 'bg-white text-black shadow-xl scale-105'
+                      : 'text-zinc-500 hover:text-white hover:bg-white/5'
+                  )}
                 >
-                  <AlertCircle size={16} />
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Todo List Header */}
-            <div className="flex items-center justify-between mb-6 px-2">
-              <div className="flex items-center gap-4">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">Lifecycle Pipeline</span>
-                <div className="w-1 h-1 bg-zinc-800 rounded-full"></div>
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">{filteredTodos.length} Tasks</span>
-              </div>
+                  {f}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Todo List */}
-            <div className="space-y-3 min-h-[300px]">
-              {todos.length === 0 && !isLoading ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="bg-zinc-900/20 border border-dashed border-white/10 rounded-[3rem] py-24 text-center backdrop-blur-3xl"
-                >
-                  <div className="mx-auto w-24 h-24 bg-zinc-900/50 rounded-[2.5rem] flex items-center justify-center mb-8 border border-white/5 shadow-2xl">
-                    <ClipboardList className="w-12 h-12 text-zinc-700" />
-                  </div>
-                  <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase whitespace-pre-wrap">Zero Workspace Objectives</h3>
-                  <p className="text-zinc-500 text-lg max-w-sm mx-auto font-medium">
-                    Your current workload is optimized. Use the AI Assistant to generate new missions or take a structured break.
-                  </p>
-                </motion.div>
-              ) : (
-                <div className="grid gap-4">
-                  <AnimatePresence mode="popLayout">
-                    {filteredTodos.map((todo) => (
-                      <TodoItem
-                        key={todo.id}
-                        todo={todo}
-                        onToggle={handleToggle}
-                        onDelete={handleDelete}
-                        onUpdate={handleUpdate}
-                      />
-                    ))}
-                  </AnimatePresence>
+          {/* Error Display */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="flex items-center gap-3 p-4 mb-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-xs uppercase tracking-widest"
+              >
+                <AlertCircle size={16} />
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Todo List Header */}
+          <div className="flex items-center justify-between mb-6 px-2">
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">Lifecycle Pipeline</span>
+              <div className="w-1 h-1 bg-zinc-800 rounded-full"></div>
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em]">{filteredTodos.length} Tasks</span>
+            </div>
+          </div>
+
+          {/* Todo List */}
+          <div className="space-y-3 min-h-[300px]">
+            {todos.length === 0 && !isLoading ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-zinc-900/20 border border-dashed border-white/10 rounded-[3rem] py-24 text-center backdrop-blur-3xl"
+              >
+                <div className="mx-auto w-24 h-24 bg-zinc-900/50 rounded-[2.5rem] flex items-center justify-center mb-8 border border-white/5 shadow-2xl">
+                  <ClipboardList className="w-12 h-12 text-zinc-700" />
                 </div>
-              )}
-            </div>
+                <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase whitespace-pre-wrap">Zero Workspace Objectives</h3>
+                <p className="text-zinc-500 text-lg max-w-sm mx-auto font-medium">
+                  Your current workload is optimized. Use the AI Assistant to generate new missions or take a structured break.
+                </p>
+              </motion.div>
+            ) : (
+              <div className="grid gap-4">
+                <AnimatePresence mode="popLayout">
+                  {filteredTodos.map((todo) => (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      onToggle={handleToggle}
+                      onDelete={handleDelete}
+                      onUpdate={handleUpdate}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
           </div>
         </div>
       </main>
 
-      {/* Footer / Status Bar */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-black/60 backdrop-blur-2xl border-t border-white/5 py-3 px-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
@@ -379,6 +456,6 @@ export default function TodosPage() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
