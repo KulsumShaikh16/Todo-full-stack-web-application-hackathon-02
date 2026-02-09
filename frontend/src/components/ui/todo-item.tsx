@@ -66,30 +66,40 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
       exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -2 }}
       className={cn(
-        'group relative overflow-hidden rounded-2xl border transition-all duration-300',
+        'group relative overflow-hidden rounded-[2rem] border transition-all duration-300',
         todo.completed
-          ? 'bg-zinc-900/10 border-white/5 opacity-40'
-          : 'bg-zinc-900/40 border-white/10 hover:border-blue-500/30 hover:bg-zinc-900/60 shadow-lg'
+          ? 'bg-zinc-900/10 border-white/5 opacity-50'
+          : 'bg-zinc-900/30 border-white/10 hover:border-blue-500/20 hover:bg-zinc-900/50 shadow-xl'
       )}
     >
-      {/* Active Indicator */}
+      {/* Dynamic Glow Effect */}
       {!todo.completed && (
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 blur transition duration-500" />
       )}
 
-      <div className="p-4 flex items-start gap-4">
-        {/* Toggle Button */}
-        <button
-          onClick={handleToggle}
-          className={cn(
-            'mt-1 w-6 h-6 rounded-full border-2 transition-all duration-300 flex items-center justify-center shrink-0',
-            todo.completed
-              ? 'bg-blue-500 border-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]'
-              : 'border-zinc-800 hover:border-blue-500 hover:scale-110 active:scale-90 bg-black/20'
+      <div className="relative p-6 md:p-8 flex items-start gap-6">
+        {/* Toggle Button Container */}
+        <div className="flex flex-col items-center gap-4 pt-1">
+          <button
+            onClick={handleToggle}
+            className={cn(
+              'w-8 h-8 rounded-full border-2 transition-all duration-500 flex items-center justify-center shrink-0 group/check',
+              todo.completed
+                ? 'bg-blue-600 border-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]'
+                : 'border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-800/30 active:scale-90'
+            )}
+          >
+            {todo.completed ? (
+              <Check size={14} strokeWidth={4} />
+            ) : (
+              <div className="w-1.5 h-1.5 rounded-full bg-zinc-700 group-hover/check:bg-blue-500 transition-colors" />
+            )}
+          </button>
+
+          {!todo.completed && (
+            <div className="w-px h-full min-h-[40px] bg-gradient-to-b from-zinc-800 to-transparent opacity-50" />
           )}
-        >
-          {todo.completed && <Check size={12} strokeWidth={4} />}
-        </button>
+        </div>
 
         <div className="flex-1 min-w-0">
           <AnimatePresence mode="wait">
@@ -98,13 +108,13 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="flex items-center gap-2"
+                className="flex flex-col md:flex-row items-stretch md:items-center gap-3 mb-4"
               >
                 <input
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="flex-1 bg-zinc-800/50 border border-white/10 rounded-lg px-3 py-1 text-base font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 text-white placeholder-zinc-500"
+                  className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-lg font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-white placeholder-zinc-700"
                   autoFocus
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleSave();
@@ -112,40 +122,49 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
                   }}
                   disabled={isUpdating}
                 />
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={handleSave}
-                    className="p-1 px-2 rounded-lg bg-blue-600 text-white text-[10px] font-bold uppercase transition-all hover:bg-blue-500 disabled:opacity-50"
+                    className="flex-1 md:flex-none h-11 px-6 rounded-xl bg-blue-600 text-white text-xs font-black uppercase tracking-widest transition-all hover:bg-blue-500 disabled:opacity-50"
                     disabled={isUpdating}
                   >
-                    Save
+                    Deploy
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="p-1 px-2 rounded-lg bg-zinc-800 text-zinc-400 text-[10px] font-bold uppercase transition-all hover:bg-zinc-700"
+                    className="p-3 rounded-xl bg-zinc-800 text-zinc-400 transition-all hover:bg-zinc-700"
                     disabled={isUpdating}
                   >
-                    Cancel
+                    <X size={16} />
                   </button>
                 </div>
               </motion.div>
             ) : (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* Priority Badge */}
-                  {todo.priority && (
-                    <span className={cn(
-                      "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-bold uppercase tracking-widest",
-                      priorityColors[todo.priority] || priorityColors[Priority.MEDIUM]
-                    )}>
-                      <Flag size={8} />
-                      {todo.priority}
-                    </span>
-                  )}
+              <div className="space-y-4">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {/* Priority Indicator */}
+                    {todo.priority && (
+                      <span className={cn(
+                        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border text-[8px] font-black uppercase tracking-[0.2em] font-mono",
+                        priorityColors[todo.priority] || priorityColors[Priority.MEDIUM]
+                      )}>
+                        <Flag size={8} fill="currentColor" />
+                        {todo.priority}
+                      </span>
+                    )}
+
+                    {/* Completion Status (Mobile) */}
+                    {todo.completed && (
+                      <span className="md:hidden text-[8px] font-black text-emerald-500 uppercase tracking-[0.2em] px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        Mission Secured
+                      </span>
+                    )}
+                  </div>
 
                   <h3
                     className={cn(
-                      'text-base font-semibold tracking-tight break-words transition-all duration-300',
+                      'text-xl md:text-2xl font-bold tracking-tight break-words transition-all duration-500',
                       todo.completed ? 'text-zinc-600 line-through' : 'text-zinc-100'
                     )}
                   >
@@ -153,70 +172,74 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
                   </h3>
                 </div>
 
-                {/* Tags List */}
-                {todo.tags && todo.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {todo.tags.map((tag, idx) => (
-                      <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800/50 border border-white/5 text-zinc-400 text-[10px] font-medium">
-                        <Hash size={8} />
-                        {tag}
-                      </span>
-                    ))}
+                {/* Sub-Metadata Row */}
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                  {/* Tags */}
+                  {todo.tags && todo.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {todo.tags.map((tag, idx) => (
+                        <span key={idx} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/50 border border-white/5 text-zinc-400 text-[10px] font-bold uppercase tracking-tighter">
+                          <Hash size={10} className="text-zinc-600" />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Operational Dates */}
+                  <div className="flex flex-wrap items-center gap-4">
+                    {todo.due_date && (
+                      <div className={cn(
+                        "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest font-mono",
+                        todo.is_overdue && !todo.completed ? "text-red-500" : "text-zinc-500"
+                      )}>
+                        <Clock size={12} strokeWidth={2.5} />
+                        {formatDateTime(todo.due_date)}
+                      </div>
+                    )}
+
+                    {todo.reminder_time && (
+                      <div className="flex items-center gap-2 text-[10px] font-black text-blue-500/70 uppercase tracking-widest font-mono bg-blue-500/5 px-2 py-1 rounded-lg border border-blue-500/10">
+                        <Bell size={12} strokeWidth={2.5} />
+                        {formatDateTime(todo.reminder_time)}
+                      </div>
+                    )}
+
+                    {todo.recurrence_pattern && (
+                      <div className="flex items-center gap-2 text-[10px] font-black text-zinc-600 uppercase tracking-widest font-mono">
+                        <RefreshCw size={12} strokeWidth={2.5} />
+                        {todo.recurrence_pattern}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             )}
           </AnimatePresence>
 
-          <div className="flex items-center justify-between mt-3">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
-                <Calendar size={10} className="text-zinc-600" />
-                {formatDateTime(todo.created_at)}
+          {/* Action Footer */}
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+                <Calendar size={12} />
+                Initialized: {formatDateTime(todo.created_at)}
               </div>
-
-              {/* Due Date Display */}
-              {todo.due_date && (
-                <div className={cn(
-                  "flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider",
-                  todo.is_overdue && !todo.completed ? "text-red-500" : "text-zinc-500"
-                )}>
-                  <Clock size={10} />
-                  {formatDateTime(todo.due_date)}
-                </div>
-              )}
-
-              {/* Reminder Display */}
-              {todo.reminder_time && (
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
-                  <Bell size={10} className="text-zinc-600" />
-                  {formatDateTime(todo.reminder_time)}
-                </div>
-              )}
-
-              {/* Recurrence Display */}
-              {todo.recurrence_pattern && (
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
-                  <RefreshCw size={10} className="text-zinc-600" />
-                  {todo.recurrence_pattern}
-                </div>
-              )}
             </div>
 
-            <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 rounded-lg hover:bg-white/5 text-zinc-500 hover:text-blue-400 transition-all"
-                title="Edit Task"
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-800/50 text-zinc-500 hover:text-white hover:bg-blue-600 transition-all duration-300"
+                title="Modify Parameters"
               >
-                <Edit2 size={13} />
+                <Edit2 size={14} />
               </button>
               <button
                 onClick={handleDelete}
-                className="p-1.5 rounded-lg hover:bg-red-500/10 text-zinc-500 hover:text-red-400 transition-all"
-                title="Delete Task"
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-800/50 text-zinc-500 hover:text-white hover:bg-red-600 transition-all duration-300"
+                title="Terminate Mission"
               >
-                <Trash2 size={13} />
+                <Trash2 size={14} />
               </button>
             </div>
           </div>

@@ -220,42 +220,42 @@ export default function TodosPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+              className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12"
             >
-              <div>
+              <div className="flex-1">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 border border-blue-500/20 text-blue-500 text-[10px] font-bold uppercase tracking-widest mb-4">
                   <Zap size={10} /> Focus Mode Active
                 </div>
-                <h2 className="text-5xl font-bold tracking-tighter text-white mb-3">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-4 leading-[1.1]">
                   Elevate <span className="text-blue-500">Focus.</span><br />
-                  Own the <span className="italic text-zinc-400">results.</span>
+                  Own the <span className="italic text-zinc-500">results.</span>
                 </h2>
-                <p className="text-zinc-500 font-medium text-lg">
+                <p className="text-zinc-400 font-medium text-lg md:text-xl">
                   You have <span className="text-white font-bold">{activeCount} missions</span> remaining for today.
                 </p>
               </div>
 
               {/* Progress Card */}
-              <div className="bg-zinc-900/40 border border-white/5 rounded-3xl p-6 backdrop-blur-xl min-w-[280px]">
+              <div className="bg-zinc-900/40 border border-white/5 rounded-[2rem] p-6 backdrop-blur-xl w-full lg:w-[320px] shrink-0">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Global Progress</span>
-                  <span className="text-lg font-bold text-white">{Math.round(progress)}%</span>
+                  <span className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-[0.2em]">Efficiency Rating</span>
+                  <span className="text-xl font-bold text-white font-mono">{Math.round(progress)}%</span>
                 </div>
-                <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden mb-6">
+                <div className="relative w-full h-3 bg-zinc-800/50 rounded-full overflow-hidden mb-6">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    className="h-full bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.3)]"
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-1000"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-zinc-500 font-bold uppercase mb-1">Active</span>
-                    <span className="text-xl font-bold text-white">{activeCount}</span>
+                  <div className="bg-black/20 rounded-2xl p-3 border border-white/5">
+                    <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter block mb-1">Active</span>
+                    <span className="text-2xl font-black text-white">{activeCount}</span>
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-zinc-500 font-bold uppercase mb-1">Done</span>
-                    <span className="text-xl font-bold text-emerald-500">{completedCount}</span>
+                  <div className="bg-black/20 rounded-2xl p-3 border border-white/5">
+                    <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter block mb-1">Secured</span>
+                    <span className="text-2xl font-black text-emerald-500">{completedCount}</span>
                   </div>
                 </div>
               </div>
@@ -284,51 +284,51 @@ export default function TodosPage() {
             </Link>
 
             {/* Task Controls - Enhanced Creation Form */}
-            <div className="flex flex-col gap-4 mb-8">
-              <div className="relative group bg-zinc-900/40 border border-white/5 rounded-3xl p-4 backdrop-blur-xl transition-all focus-within:bg-zinc-900/60 focus-within:border-blue-500/20 focus-within:shadow-xl focus-within:shadow-blue-500/5">
-                <form onSubmit={handleCreateTodo} className="flex flex-col gap-4 relative">
-                  <div className="relative">
-                    <input
-                      id="objective-input"
-                      name="title"
-                      placeholder="Initialize new objective..."
-                      value={newTodoTitle}
-                      onChange={(e) => setNewTodoTitle(e.target.value)}
-                      disabled={isAdding}
-                      autoComplete="off"
-                      className="w-full h-12 bg-transparent border-none text-lg text-white font-semibold placeholder-zinc-600 focus:outline-none pl-2"
-                    />
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                      <Button
-                        type="submit"
-                        disabled={isAdding || !newTodoTitle.trim()}
-                        className="bg-blue-600 hover:bg-blue-500 text-white rounded-xl px-4 py-2 transition-all disabled:opacity-50 active:scale-95 text-xs font-bold uppercase tracking-widest"
-                      >
-                        {isAdding ? 'Saving...' : 'Add'}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Enhanced Options Row */}
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-4 pt-4 border-t border-white/5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
-                        <Flag size={10} className="text-zinc-600" /> Priority
-                      </span>
-                      <PriorityPicker
-                        value={newTodoPriority}
-                        onChange={setNewTodoPriority}
+            <div className="mb-12">
+              <div className="relative group bg-zinc-900/40 border border-white/5 rounded-[2.5rem] p-6 backdrop-blur-xl transition-all hover:bg-zinc-900/60 focus-within:ring-2 focus-within:ring-blue-500/20 shadow-2xl">
+                <form onSubmit={handleCreateTodo} className="flex flex-col gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 relative">
+                      <input
+                        id="objective-input"
+                        name="title"
+                        placeholder="Initialize new objective..."
+                        value={newTodoTitle}
+                        onChange={(e) => setNewTodoTitle(e.target.value)}
                         disabled={isAdding}
+                        autoComplete="off"
+                        className="w-full bg-transparent border-none text-xl md:text-2xl text-white font-bold placeholder-zinc-700 focus:outline-none py-2"
                       />
                     </div>
+                    <Button
+                      type="submit"
+                      disabled={isAdding || !newTodoTitle.trim()}
+                      className="bg-blue-600 hover:bg-blue-500 text-white rounded-2xl px-8 h-12 transition-all disabled:opacity-50 active:scale-95 text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-600/20"
+                    >
+                      {isAdding ? 'Initializing...' : 'Add Mission'}
+                    </Button>
+                  </div>
 
-                    <div className="h-6 w-px bg-zinc-800 hidden sm:block"></div>
+                  {/* Options Stack */}
+                  <div className="space-y-6 pt-6 border-t border-white/5">
+                    <div className="flex flex-col md:flex-row md:items-center gap-6">
+                      <div className="flex flex-col gap-2 min-w-[140px]">
+                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
+                          <Flag size={10} /> Priority
+                        </span>
+                        <PriorityPicker
+                          value={newTodoPriority}
+                          onChange={setNewTodoPriority}
+                          disabled={isAdding}
+                        />
+                      </div>
 
-                    <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
-                        <Hash size={10} className="text-zinc-600" /> Tags
-                      </span>
-                      <div className="flex-1">
+                      <div className="hidden md:block w-px h-8 bg-zinc-800" />
+
+                      <div className="flex flex-col gap-2 flex-1">
+                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
+                          <Hash size={10} /> Tag Categorization
+                        </span>
                         <TagInput
                           value={newTodoTags}
                           onChange={setNewTodoTags}
@@ -337,41 +337,39 @@ export default function TodosPage() {
                       </div>
                     </div>
 
-                    <div className="h-6 w-px bg-zinc-800 hidden lg:block"></div>
-
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
-                          <Clock size={10} className="text-zinc-600" /> Due
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                      <div className="flex flex-col gap-2">
+                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
+                          <Clock size={10} /> Due Date
                         </span>
                         <input
                           type="datetime-local"
                           value={newTodoDueDate}
                           onChange={(e) => setNewTodoDueDate(e.target.value)}
-                          className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                          className="bg-black/30 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
                         />
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
-                          <Bell size={10} className="text-zinc-600" /> Alert
+                      <div className="flex flex-col gap-2">
+                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
+                          <Bell size={10} /> Alert Pulse
                         </span>
                         <input
                           type="datetime-local"
                           value={newTodoReminder}
                           onChange={(e) => setNewTodoReminder(e.target.value)}
-                          className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                          className="bg-black/30 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
                         />
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
-                          <RefreshCw size={10} className="text-zinc-600" /> Repeat
+                      <div className="flex flex-col gap-2">
+                        <span className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] flex items-center gap-1.5 font-mono">
+                          <RefreshCw size={10} /> Frequency
                         </span>
                         <select
                           value={newTodoRecurrence}
                           onChange={(e) => setNewTodoRecurrence(e.target.value)}
-                          className="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all appearance-none cursor-pointer min-w-[100px]"
+                          className="bg-black/30 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all cursor-pointer font-mono appearance-none"
                         >
                           <option value="">None</option>
                           <option value="daily">Daily</option>
