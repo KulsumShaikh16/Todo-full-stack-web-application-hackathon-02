@@ -298,7 +298,9 @@ export default function TodosPage() {
                   {/* Enhanced Options Row */}
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-4 pt-4 border-t border-white/5">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Priority</span>
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
+                        <Flag size={10} className="text-zinc-600" /> Priority
+                      </span>
                       <PriorityPicker
                         value={newTodoPriority}
                         onChange={setNewTodoPriority}
@@ -309,7 +311,9 @@ export default function TodosPage() {
                     <div className="h-6 w-px bg-zinc-800 hidden sm:block"></div>
 
                     <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Tags</span>
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
+                        <Hash size={10} className="text-zinc-600" /> Tags
+                      </span>
                       <div className="flex-1">
                         <TagInput
                           value={newTodoTags}
@@ -323,7 +327,9 @@ export default function TodosPage() {
 
                     <div className="flex items-center gap-3 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Due</span>
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
+                          <Clock size={10} className="text-zinc-600" /> Due
+                        </span>
                         <input
                           type="datetime-local"
                           value={newTodoDueDate}
@@ -333,7 +339,9 @@ export default function TodosPage() {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Alert</span>
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
+                          <Bell size={10} className="text-zinc-600" /> Alert
+                        </span>
                         <input
                           type="datetime-local"
                           value={newTodoReminder}
@@ -343,7 +351,9 @@ export default function TodosPage() {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Repeat</span>
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
+                          <RefreshCw size={10} className="text-zinc-600" /> Repeat
+                        </span>
                         <select
                           value={newTodoRecurrence}
                           onChange={(e) => setNewTodoRecurrence(e.target.value)}
